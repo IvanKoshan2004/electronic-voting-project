@@ -9,11 +9,11 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 
 app.use((req, res) => {
-    res.status(404).json({
-        message: "Not Found",
-    });
+  res.status(404).json({
+    message: "Not Found",
+  });
 });
 
 app.listen(APP_PORT, () => {
-    console.log(`Server is listening on port ${APP_PORT}`);
+  console.log(`Server is listening on port ${APP_PORT}`);
 });
