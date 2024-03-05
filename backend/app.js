@@ -1,8 +1,9 @@
 import express from "express";
 import authRouter from "./routers/auth.js";
 import userRouter from "./routers/user.js";
+import { env } from "./lib/env.js";
 
-const APP_PORT = process.env.APP_PORT || 3000;
+const APP_PORT = env.APP_PORT;
 const app = express();
 
 app.use("/auth", authRouter);
