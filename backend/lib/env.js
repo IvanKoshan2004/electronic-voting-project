@@ -6,6 +6,6 @@ dotenv.config("./env.js");
 export const env = z
   .object({
     APP_PORT: z.string().refine(val => /^[0-9]+$/.test(val)),
-    MONGODB_URI: z.string(),
+    DATABASE_URL: z.string(),
   })
   .parse(process.env);
