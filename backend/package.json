@@ -6,11 +6,14 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "generate": "prisma generate",
+    "postinstall": "prisma generate"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.10.2",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
     "zod": "^3.22.4"
@@ -19,6 +22,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "nodemon": "^3.1.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "prisma": "^5.10.2"
   }
 }
