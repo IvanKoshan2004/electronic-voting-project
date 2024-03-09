@@ -1,7 +1,7 @@
 import { Router } from "express";
-import authController from "../controllers/auth-controller.js";
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 import { isBodyEmpty } from "../middlewares/isBodyEmpty.js";
+import { default as authController } from "../controllers/auth.js";
 
 const authRouter = Router();
 

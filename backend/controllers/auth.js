@@ -1,8 +1,14 @@
+import { z } from "zod";
 import { HttpError } from "../helpers/HttpError.js";
 import { prisma } from "../lib/db.js";
+import { registerSchema } from "../validation/registerSchema.js";
+
+const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
 
 const register = async (req, res, next) => {
   try {
+    registerSchema.parse(req.body);
+
     const { username, password } = req.body;
     const user = await prisma.user.create({
       data: {
@@ -12,11 +18,15 @@ const register = async (req, res, next) => {
     });
     return res
       .cookie("user", JSON.stringify(user), {
-        maxAge: 3600000,
+        maxAge: COOKIE_MAX_AGE_MILISECONDS,
       })
       .json({ data: user });
   } catch (error) {
-    next(error);
+    if (error instanceof z.ZodError) {
+      console.log(error.issues[0].message);
+      return next(HttpError(400, { message: error.issues[0].message }));
+    }
+    return next(error);
   }
 };
 
@@ -30,7 +40,7 @@ const login = async (req, res, next) => {
       },
     });
     if (!user) {
-      throw HttpError(401, "Email or password is wrong");
+      throw HttpError(401, { message: "Email or password is wrong" });
     }
 
     return res

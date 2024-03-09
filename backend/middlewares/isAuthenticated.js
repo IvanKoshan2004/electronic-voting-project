@@ -5,7 +5,7 @@ export const isAuthenticated = async (req, res, next) => {
   try {
     const { user } = req.cookies;
     if (!user) {
-      return next(HttpError(401, "Not authorized"));
+      return next(HttpError(401));
     }
     const { id } = JSON.parse(user);
     const dbUser = prisma.user.findFirst({
@@ -14,7 +14,7 @@ export const isAuthenticated = async (req, res, next) => {
       },
     });
     if (!dbUser) {
-      return next(HttpError(401, "Not authorized"));
+      return next(HttpError(401));
     }
     next();
   } catch (error) {
