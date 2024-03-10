@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const registerSchema = z.object({
   username: z
-    .string({ required_error: "Username us required" })
+    .string({ required_error: "Username is required" })
     .min(1)
     .refine(val => /^[a-zA-Z]+$/.test(val), { message: "Username can contain only letters" }),
   password: z
