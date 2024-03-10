@@ -1,31 +1,17 @@
 import { Router } from "express";
-import { prisma } from "../lib/db.js";
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
+import { default as authController } from "../controllers/auth.js";
+import { validateBody } from "../middlewares/validateBody.js";
+import { registerSchema } from "../validation/registerSchema.js";
 
 const authRouter = Router();
 
-authRouter.get("", (req, res) => {
-  res.json({ message: "Get request on /auth" });
-});
+authRouter.post("/register", validateBody(registerSchema), authController.register);
 
-authRouter.post("", async (req, res) => {
-  try {
-    const { username, password } = req.query;
-    const user = await prisma.user.create({
-      data: {
-        password,
-        username,
-        profile: {
-          create: {
-            phoneNumber: "10000000",
-          },
-        },
-      },
-    });
-    return res.json({ data: user });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).send({ error: e });
-  }
-});
+authRouter.post("/login", validateBody(registerSchema), authController.login);
+
+authRouter.post("/logout", authController.logout);
+
+authRouter.get("/current", isAuthenticated, authController.getCurrent);
 
 export default authRouter;
