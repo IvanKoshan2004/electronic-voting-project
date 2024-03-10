@@ -1,14 +1,10 @@
-import { z } from "zod";
 import { HttpError } from "../helpers/HttpError.js";
 import { prisma } from "../lib/db.js";
-import { registerSchema } from "../validation/registerSchema.js";
 
 const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
 
 const register = async (req, res, next) => {
   try {
-    registerSchema.parse(req.body);
-
     const { username, password } = req.body;
     const user = await prisma.user.create({
       data: {
@@ -22,10 +18,6 @@ const register = async (req, res, next) => {
       })
       .json({ data: user });
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      console.log(error.issues[0].message);
-      return next(HttpError(400, { message: error.issues[0].message }));
-    }
     return next(error);
   }
 };
