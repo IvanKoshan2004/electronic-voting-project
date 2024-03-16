@@ -1,7 +1,8 @@
 import express, { json } from "express";
 import authRouter from "./routers/auth.js";
 import userRouter from "./routers/user.js";
-import { env } from "./lib/env.js";
+import electionRouter from "./routers/election.js";
+import env from "./lib/env.cjs";
 import cookieParser from "cookie-parser";
 import { handleError } from "./middlewares/handleError.js";
 
@@ -12,6 +13,7 @@ app.use(json());
 app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/election", electionRouter);
 
 app.use((req, res) => {
   res.status(404).json({
