@@ -7,7 +7,7 @@ module.exports = {
   ...z
     .object({
       APP_PORT: z.string().refine(val => /^[0-9]+$/.test(val)),
-      MONGODB_URI: z.string(),
+      DATABASE_URL: z.string(),
       PRIVATE_KEY: z.string(),
       ELECTION_FACTORY_CONTRACT_ADDRESS: z.string(),
     })
