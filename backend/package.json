@@ -6,19 +6,27 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon -e js,json,env -w .env app.js ",
+    "blockchain:deploy": "hardhat ignition deploy ignition/modules/Contracts.cjs --network localhost",
+    "blockchain:reset": "shx rm -rf ./ignition/deployments ./artifacts ./cache",
+    "blockchain:redeploy": "npm run blockchain:reset && npm run blockchain:deploy"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
     "express": "^4.18.3",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "^0.15.0",
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "nodemon": "^3.1.0",
-    "prettier": "^3.2.5"
+    "prettier": "^3.2.5",
+    "shelljs": "^0.8.5",
+    "shx": "^0.3.4"
   }
 }
