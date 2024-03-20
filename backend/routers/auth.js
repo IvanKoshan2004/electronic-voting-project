@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
-import { default as authController } from "../controllers/auth.js";
+import authController from "../controllers/auth.js";
 import { validateBody } from "../middlewares/validateBody.js";
 import { registerSchema } from "../validation/registerSchema.js";
 

@@ -8,8 +8,9 @@ This is a electric voting application based on blockchain.
 
 1. `cd` into `backend`
 2. run `npm install` to install dependencies
-3. populate `.env` file in backend folder, using the example file `.env.sample`. Also checkout [docs](./docs/MONGO.md) on how to setup MongoDB
-4. run `npm run start` or `npm run start:dev` to start the server
+3. follow the [docs](./docs/MONGO.md) on how to setup MongoDB environment.
+4. follow the [docs](./docs/HARDHAT.md) on how to setup blockchain dev environment.
+5. run `npm run start` or `npm run start:dev` to start the server
 
 ### Frontend
 
