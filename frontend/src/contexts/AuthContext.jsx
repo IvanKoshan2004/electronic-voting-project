@@ -1,15 +1,14 @@
 import { createContext } from "react";
 
 export const AuthContext = createContext(null);
-const user = {
-  name: "Bobb",
-};
+
 export const AuthProvider = ({ children }) => {
-  const checkAuth = token => {
-    if (!token) {
-      return "/auth/login";
+  const checkAuth = cookie => {
+    if (!cookie) {
+      return false;
     }
-    return null;
+    return true;
   };
-  return <AuthContext.Provider value={{ checkAuth, user }}>{children}</AuthContext.Provider>;
+
+  return <AuthContext.Provider value={{ checkAuth }}>{children}</AuthContext.Provider>;
 };
