@@ -1,25 +1,32 @@
-import { useContext, useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import Cookies from "js-cookie";
+import { logout } from "../api/auth";
 
 export default function AppLayout() {
-  const token = "";
   const { checkAuth } = useContext(AuthContext);
-  const [isAuthUrl, setIsAuthUrl] = useState(null);
+  const navigate = useNavigate();
+  const cookies = Cookies.get("user");
 
-  useEffect(() => {
-    const navigateURL = checkAuth(token);
-    if (navigateURL) {
-      setIsAuthUrl(navigateURL);
-    }
-  }, [token, checkAuth]);
-  if (isAuthUrl) {
-    return <Navigate to={isAuthUrl} />;
+  if (!checkAuth(cookies)) {
+    return <Navigate to="/auth/login" />;
   }
-  console.log(isAuthUrl);
+
+  const handleLogout = async () => {
+    const res = await logout();
+    console.log(res.message);
+    navigate("/");
+  };
+
   return (
     <div>
       App layout hi there
+      {checkAuth(cookies) ? (
+        <button onClick={handleLogout} type="button">
+          Logout
+        </button>
+      ) : null}
       <Outlet />
     </div>
   );
