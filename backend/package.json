@@ -21,6 +21,7 @@
     "dotenv": "^16.4.5",
     "ethers": "^6.11.1",
     "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -30,8 +31,8 @@
     "eslint-plugin-import": "^2.29.1",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
+    "prisma": "^5.10.2",
     "shelljs": "^0.8.5",
-    "shx": "^0.3.4",
-    "prisma": "^5.10.2"
+    "shx": "^0.3.4"
   }
 }

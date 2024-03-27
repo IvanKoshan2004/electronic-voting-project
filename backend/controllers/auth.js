@@ -1,7 +1,8 @@
 import { HttpError } from "../helpers/HttpError.js";
 import { prisma } from "../lib/db.js";
+import jwt from "jsonwebtoken";
 
-const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
+const { JWT_SECRET } = process.env;
 
 const register = async (req, res, next) => {
   try {
@@ -12,11 +13,20 @@ const register = async (req, res, next) => {
         username,
       },
     });
-    return res
-      .cookie("user", JSON.stringify(user), {
-        maxAge: COOKIE_MAX_AGE_MILISECONDS,
-      })
-      .json({ data: user });
+    const payload = {
+      id: user.id,
+    };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+    const userWithToken = await prisma.user.update({
+      where: { id: user.id },
+      data: { token },
+    });
+    return res.json({
+      data: {
+        user: { username: userWithToken.username, id: userWithToken.id, token: userWithToken.token },
+        message: "User successfully created",
+      },
+    });
   } catch (error) {
     return next(error);
   }
@@ -34,15 +44,18 @@ const login = async (req, res, next) => {
     if (!user) {
       throw HttpError(401, { message: "Email or password is wrong" });
     }
+    const payload = {
+      id: user.id,
+    };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+    const userWithToken = await prisma.user.update({ where: { username }, data: { token } });
 
-    return res
-      .cookie("user", JSON.stringify({ username: user.username, id: user.id }))
-      .status(200)
-      .send({
-        data: {
-          message: "Logged in succesfully",
-        },
-      });
+    return res.status(200).send({
+      data: {
+        user: { username: userWithToken.username, id: userWithToken.id, token: userWithToken.token },
+        message: "Logged in succesfully",
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -50,14 +63,13 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    return res
-      .status(200)
-      .cookie("user", "")
-      .send({
-        data: {
-          message: "Successfully logout",
-        },
-      });
+    const { id } = req.body;
+    await prisma.user.update({ where: { id }, data: { token: "" } });
+    return res.status(200).send({
+      data: {
+        message: "Successfully logout",
+      },
+    });
   } catch (error) {
     next(error);
   }
