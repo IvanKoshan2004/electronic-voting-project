@@ -5,10 +5,17 @@ import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
 import AuthLayout from "./layouts/AuthLayout";
 import AppLayout from "./layouts/AppLayout";
+import { AuthProvider } from "./contexts/AuthContext";
+import RootLayout from "./layouts/RootLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
+    element: (
+      <AuthProvider>
+        <RootLayout />
+      </AuthProvider>
+    ),
     children: [
       {
         path: "app/",
@@ -35,7 +42,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
