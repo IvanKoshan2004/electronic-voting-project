@@ -1,20 +1,19 @@
 import { useContext } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import Cookies from "js-cookie";
 import { logout } from "../api/auth";
 
 export default function AppLayout() {
-  const { checkAuth } = useContext(AuthContext);
+  const { checkAuth, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-  const cookies = Cookies.get("user");
 
-  if (!checkAuth(cookies)) {
+  if (!checkAuth()) {
     return <Navigate to="/auth/login" />;
   }
 
   const handleLogout = async () => {
     const res = await logout();
+    setUser(null);
     console.log(res.message);
     navigate("/");
   };
@@ -22,7 +21,7 @@ export default function AppLayout() {
   return (
     <div>
       App layout hi there
-      {checkAuth(cookies) ? (
+      {checkAuth() ? (
         <button onClick={handleLogout} type="button">
           Logout
         </button>
