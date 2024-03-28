@@ -10,6 +10,7 @@ module.exports = {
       DATABASE_URL: z.string(),
       PRIVATE_KEY: z.string(),
       ELECTION_FACTORY_CONTRACT_ADDRESS: z.string(),
+      FRONT_URL: z.string(),
     })
     .parse(process.env),
 };
