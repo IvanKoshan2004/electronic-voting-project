@@ -19,8 +19,16 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+        index: true,
+        element: <Navigate to="/app" />,
+      },
+      {
         path: "app/",
-        element: <PrivateRoute redirectTo="/auth/login" component={<AppLayout />} />,
+        element: (
+          <PrivateRoute redirectTo="/auth/login">
+            <AppLayout />
+          </PrivateRoute>
+        ),
       },
       {
         path: "auth/",

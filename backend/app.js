@@ -15,7 +15,7 @@ app.use(json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.FRONT_URL, // replace with your frontend domain
+    origin: env.FRONT_URL, // replace with your frontend domain
     credentials: true,
   }),
 );

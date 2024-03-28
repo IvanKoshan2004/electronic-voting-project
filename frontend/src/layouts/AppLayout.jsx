@@ -6,8 +6,7 @@ export default function AppLayout() {
 
   const handleLogout = async () => {
     const res = await logout();
-    console.log(res.message);
-    navigate("/");
+    if (res.success) navigate("/");
   };
 
   return (

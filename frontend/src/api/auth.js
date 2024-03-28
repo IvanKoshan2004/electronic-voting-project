@@ -27,6 +27,6 @@ export const logout = async () => {
 };
 
 export const currentAuth = async () => {
-  const res = await axios.get("/auth/current");
-  return res;
+  const { data } = await axios.get("/auth/current");
+  return data;
 };

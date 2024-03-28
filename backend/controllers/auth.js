@@ -41,6 +41,7 @@ const login = async (req, res, next) => {
       .status(200)
       .send(
         createApiResponse({
+          user: { username: user.username, id: user.id },
           message: "Logged in succesfully",
         }),
       );
