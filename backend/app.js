@@ -5,12 +5,19 @@ import electionRouter from "./routers/election.js";
 import env from "./lib/env.cjs";
 import cookieParser from "cookie-parser";
 import { handleError } from "./middlewares/handleError.js";
+import cors from "cors";
 
 const APP_PORT = env.APP_PORT;
 const app = express();
 
 app.use(json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:5173", // replace with your frontend domain
+    credentials: true,
+  }),
+);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/election", electionRouter);

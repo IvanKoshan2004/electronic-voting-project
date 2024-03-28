@@ -16,7 +16,7 @@ const register = async (req, res, next) => {
       .cookie("user", JSON.stringify(user), {
         maxAge: COOKIE_MAX_AGE_MILISECONDS,
       })
-      .json({ data: user });
+      .json({ user });
   } catch (error) {
     return next(error);
   }
@@ -39,9 +39,7 @@ const login = async (req, res, next) => {
       .cookie("user", JSON.stringify({ username: user.username, id: user.id }))
       .status(200)
       .send({
-        data: {
-          message: "Logged in succesfully",
-        },
+        message: "Logged in succesfully",
       });
   } catch (error) {
     next(error);
@@ -50,14 +48,9 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    return res
-      .status(200)
-      .cookie("user", "")
-      .send({
-        data: {
-          message: "Successfully logout",
-        },
-      });
+    return res.status(200).cookie("user", "").send({
+      message: "Successfully logout",
+    });
   } catch (error) {
     next(error);
   }
@@ -69,9 +62,7 @@ const getCurrent = async (req, res, next) => {
     const user = await prisma.user.findFirst({ where: { id } });
 
     return res.status(200).send({
-      data: {
-        user,
-      },
+      user,
     });
   } catch (error) {
     next(error);
