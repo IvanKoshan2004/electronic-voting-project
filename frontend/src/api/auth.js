@@ -3,29 +3,30 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:8888";
 axios.defaults.withCredentials = true;
 
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    console.log(error.response.data.message);
+    return { data: { success: error.response.data.success } };
+  },
+);
+
 export const login = async userData => {
-  try {
-    const user = await axios.post("/auth/login", userData);
-    return user;
-  } catch (error) {
-    console.log(error.message);
-  }
+  const { data } = await axios.post("/auth/login", userData);
+  return data;
 };
 
 export const register = async userData => {
-  try {
-    const user = await axios.post("/auth/register", userData);
-    return user;
-  } catch (error) {
-    console.log(error.message);
-  }
+  const { data } = await axios.post("/auth/register", userData);
+  return data;
 };
 
 export const logout = async () => {
-  try {
-    const { data } = await axios.post("/auth/logout");
-    return data;
-  } catch (error) {
-    console.log(error.message);
-  }
+  const { data } = await axios.post("/auth/logout");
+  return data;
+};
+
+export const currentAuth = async () => {
+  const res = await axios.get("/auth/current");
+  return res;
 };

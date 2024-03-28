@@ -1,4 +1,5 @@
 import { HttpError } from "../helpers/HttpError.js";
+import { createApiResponse } from "../helpers/createApiResponse.js";
 import { prisma } from "../lib/db.js";
 
 const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
@@ -13,10 +14,10 @@ const register = async (req, res, next) => {
       },
     });
     return res
-      .cookie("user", JSON.stringify(user), {
+      .cookie("user", JSON.stringify({ username: user.username, id: user.id }), {
         maxAge: COOKIE_MAX_AGE_MILISECONDS,
       })
-      .json({ user });
+      .json(createApiResponse({ user: { username: user.username, id: user.id } }));
   } catch (error) {
     return next(error);
   }
@@ -38,9 +39,11 @@ const login = async (req, res, next) => {
     return res
       .cookie("user", JSON.stringify({ username: user.username, id: user.id }))
       .status(200)
-      .send({
-        message: "Logged in succesfully",
-      });
+      .send(
+        createApiResponse({
+          message: "Logged in succesfully",
+        }),
+      );
   } catch (error) {
     next(error);
   }
@@ -48,9 +51,14 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    return res.status(200).cookie("user", "").send({
-      message: "Successfully logout",
-    });
+    return res
+      .status(200)
+      .cookie("user", "")
+      .send(
+        createApiResponse({
+          message: "Successfully logout",
+        }),
+      );
   } catch (error) {
     next(error);
   }
@@ -61,9 +69,7 @@ const getCurrent = async (req, res, next) => {
     const { id } = JSON.parse(req.cookies.user);
     const user = await prisma.user.findFirst({ where: { id } });
 
-    return res.status(200).send({
-      user,
-    });
+    return res.status(200).send(createApiResponse({ user: { username: user.username, id: user.id } }));
   } catch (error) {
     next(error);
   }

@@ -7,6 +7,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import AppLayout from "./layouts/AppLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 import RootLayout from "./layouts/RootLayout";
+import { PrivateRoute } from "./components/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "app/",
-        element: <AppLayout />,
+        element: <PrivateRoute redirectTo="/auth/login" component={<AppLayout />} />,
       },
       {
         path: "auth/",
