@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "start:dev": "nodemon -e js,json,env -w .env app.js ",
+    "start:dev": "nodemon -e js,json,env app.js ",
     "generate": "prisma generate",
     "blockchain:deploy": "hardhat ignition deploy ignition/modules/Contracts.cjs --network localhost",
     "blockchain:reset": "shx rm -rf ./ignition/deployments ./artifacts ./cache",
