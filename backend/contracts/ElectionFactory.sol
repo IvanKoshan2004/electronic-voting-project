@@ -37,8 +37,9 @@ contract ElectionFactory {
         // check for a number of elements in given array (min. 2 candidates, max. - 10)
         require(_candidateNames.length >= 2 && _candidateNames.length <= 10, "Invalid number of candidates");
 
-        Ballot storage newBallot = ballots[nextBallotId++];
+        Ballot storage newBallot = ballots[nextBallotId];
 
+        newBallot.id = nextBallotId++;
         newBallot.name = _name;
         newBallot.description = _description;
         newBallot.createTime = block.timestamp;
