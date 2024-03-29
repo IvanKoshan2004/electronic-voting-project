@@ -3,6 +3,8 @@
 pragma solidity ^0.8.0;
 
 contract ElectionFactory {
+    address public owner;
+
     struct Candidate {
         uint8 id;
         string name;
@@ -19,7 +21,16 @@ contract ElectionFactory {
     mapping(uint256 => Ballot) public ballots;
     uint256 public nextBallotId;
 
-    function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public {
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can perform this action");
+        _;
+    }
+
+    constructor() {
+        owner = msg.sender; // get address of the contract deployer
+    }
+
+    function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner {
 
         // check for a number of elements in given array (min. 2 candidates, max. - 10)
         require(_candidateNames.length >= 2 && _candidateNames.length <= 10, "Invalid number of candidates");
