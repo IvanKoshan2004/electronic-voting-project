@@ -1,20 +1,17 @@
 import { Router } from "express";
-import { ElectionFactoryContract } from "../lib/contracts.js";
+import { electionFactoryService } from "../services/electionService.js";
 
 const electionRouter = Router();
 
+// election factory service usage showcase. this code is up to change
 electionRouter.post("", async (req, res) => {
-  const { electionName } = req.query;
-  console.log("Election name in query: ", electionName);
-
-  const transaction = await ElectionFactoryContract.createElection(electionName);
-  console.log(transaction);
-  await transaction.wait();
-
-  const electionNamesView = await ElectionFactoryContract.getAllElectionNames();
-  console.log(electionNamesView);
-
-  res.json({ data: electionNamesView });
+  try {
+    await electionFactoryService.createBallot("name", "description", 3600, ["choice 1", "choice 2"]);
+    const ballots = await electionFactoryService.getAllBallots();
+    res.json({ data: ballots });
+  } catch (e) {
+    res.status(500).json({ error: e });
+  }
 });
 
 export default electionRouter;
