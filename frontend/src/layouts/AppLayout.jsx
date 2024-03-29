@@ -1,25 +1,20 @@
-import { useContext, useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthContext";
+import { Outlet, useNavigate } from "react-router-dom";
+import { logout } from "../api/auth";
 
 export default function AppLayout() {
-  const token = "";
-  const { checkAuth } = useContext(AuthContext);
-  const [isAuthUrl, setIsAuthUrl] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const navigateURL = checkAuth(token);
-    if (navigateURL) {
-      setIsAuthUrl(navigateURL);
-    }
-  }, [token, checkAuth]);
-  if (isAuthUrl) {
-    return <Navigate to={isAuthUrl} />;
-  }
-  console.log(isAuthUrl);
+  const handleLogout = async () => {
+    const res = await logout();
+    if (res.success) navigate("/");
+  };
+
   return (
     <div>
       App layout hi there
+      <button onClick={handleLogout} type="button">
+        Logout
+      </button>
       <Outlet />
     </div>
   );
