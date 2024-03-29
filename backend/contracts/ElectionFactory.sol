@@ -6,7 +6,7 @@ contract ElectionFactory {
     address public owner;
 
     struct Candidate {
-        uint256 id;
+        uint8 id;
         string name;
     }
 
