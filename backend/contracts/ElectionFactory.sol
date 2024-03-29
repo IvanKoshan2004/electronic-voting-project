@@ -14,7 +14,7 @@ contract ElectionFactory {
         string name;
         string description;
         uint256 createTime;
-        uint256 votingTime;
+        uint256 endTime;
         Candidate[] candidates;
     }
 
@@ -41,7 +41,7 @@ contract ElectionFactory {
         newBallot.name = _name;
         newBallot.description = _description;
         newBallot.createTime = block.timestamp;
-        newBallot.votingTime = _votingTime; // takes the value of the voting lifetime in seconds
+        newBallot.endTime = newBallot.createTime + _votingTime;
 
         for(uint i = 0; i < _candidateNames.length; i++) { // takes array of strings (candidate names) and converts it to array of structs (id + name)
             newBallot.candidates.push(Candidate(uint8(i), _candidateNames[i]));
