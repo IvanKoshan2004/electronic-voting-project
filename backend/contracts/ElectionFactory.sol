@@ -29,7 +29,7 @@ contract ElectionFactory {
 
     constructor() {
         owner = msg.sender; // get address of the contract deployer
-        nextBallotId = 1;
+        nextBallotId = 0;
     }
 
     function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner {
