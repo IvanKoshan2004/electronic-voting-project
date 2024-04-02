@@ -1,17 +1,19 @@
 import { Router } from "express";
-import { electionFactoryService } from "../services/electionService.js";
+import electionController from "../controllers/election.js";
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
+import { electionSchema } from "../validation/electionSchema.js";
+import { validateBody } from "../middlewares/validateBody.js";
 
 const electionRouter = Router();
 
-// election factory service usage showcase. this code is up to change
-electionRouter.post("", async (req, res) => {
-  try {
-    await electionFactoryService.createBallot("name", "description", 3600, ["choice 1", "choice 2"]);
-    const ballots = await electionFactoryService.getAllBallots();
-    res.json({ data: ballots });
-  } catch (e) {
-    res.status(500).json({ error: e });
-  }
+electionRouter.post(
+  "/create-election",
+  isAuthenticated,
+  validateBody(electionSchema),
+  electionController.createElection,
+);
+electionRouter.get("/", () => {
+  console.log("get");
 });
 
 export default electionRouter;
