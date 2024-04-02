@@ -24,7 +24,7 @@ app.use("/user", userRouter);
 app.use("/election", electionRouter);
 
 app.use((req, res) => {
-  res.status(404).send(
+  res.status(404).json(
     createApiResponse(
       {
         message: "Not Found",

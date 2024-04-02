@@ -12,8 +12,5 @@ electionRouter.post(
   validateBody(electionSchema),
   electionController.createElection,
 );
-electionRouter.get("/", () => {
-  console.log("get");
-});
 
 export default electionRouter;

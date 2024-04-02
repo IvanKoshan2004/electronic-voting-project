@@ -4,7 +4,7 @@ export function HttpError(statusCode, details = {}) {
     401: "Not authorized",
     404: "Not Found",
   };
-  console.log(statusCode);
+
   if (!errorMessages[statusCode]) {
     throw Error("Unknown status code");
   }
