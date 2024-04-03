@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = useCallback(async () => {
     setHasFetched(false);
-    const { data } = await currentAuth();
+    const data = await currentAuth();
     if (!data.success) {
       setUser(null);
       setHasFetched(true);

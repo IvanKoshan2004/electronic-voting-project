@@ -4,8 +4,10 @@ export const validateBody = zodSchema => {
   return (req, res, next) => {
     const body = req.body;
     const { success, error } = zodSchema.safeParse(body);
+    console.log(error);
     if (!success) {
       const { issues } = error;
+    console.log(issues);
       return next(HttpError(400, { message: issues[0].message }));
     }
     next();
