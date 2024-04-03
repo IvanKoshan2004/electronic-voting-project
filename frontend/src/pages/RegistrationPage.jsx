@@ -10,7 +10,16 @@ export default function RegistrationPage() {
   const [matchPassword, setMatchPassword] = useState("");
   const handleSubmit = async e => {
     e.preventDefault();
-    await register({ username, password });
+    if (password !== matchPassword) {
+      console.log("Password does'nt match :(");
+      return;
+    }
+    try {
+      await register({ username, password });
+      navigate("/app");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className={css.mainContainer}>
