@@ -6,7 +6,7 @@ axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
   response => response,
   error => {
-    console.log(error.response.data.message);
+    console.log(error);
     return { data: { success: error.response.data.success } };
   },
 );
@@ -17,7 +17,8 @@ export const login = async userData => {
 };
 
 export const register = async userData => {
-  const { data } = await axios.post("/auth/register", userData);
+  const data = await axios.post("/auth/register", userData);
+  console.log(data);
   return data;
 };
 
