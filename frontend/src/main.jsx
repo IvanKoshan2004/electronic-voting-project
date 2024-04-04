@@ -8,6 +8,7 @@ import AppLayout from "./layouts/AppLayout";
 import { AuthProvider } from "./contexts/AuthContext";
 import RootLayout from "./layouts/RootLayout";
 import { PrivateRoute } from "./components/PrivateRoute";
+import "./global.css";
 
 const router = createBrowserRouter([
   {

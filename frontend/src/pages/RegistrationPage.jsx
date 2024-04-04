@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { register } from "../api/auth";
 import css from "./LoginAndRegisterPage.module.css";
 
@@ -8,13 +8,15 @@ export default function RegistrationPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [matchPassword, setMatchPassword] = useState("");
+  const [isMatched, setIsMatched] = useState(true);
   const handleSubmit = async e => {
     e.preventDefault();
     if (password !== matchPassword) {
-      console.log("Password does'nt match :(");
+      setIsMatched(false);
       return;
     }
     try {
+      setIsMatched(true);
       await register({ username, password });
       navigate("/app");
     } catch (error) {
@@ -24,7 +26,7 @@ export default function RegistrationPage() {
   return (
     <div className={css.mainContainer}>
       <div className={css.formBlock}>
-        <h1>REGISTRATION</h1>
+        <h1>registration</h1>
         <form onSubmit={handleSubmit}>
           <input value={username} placeholder="username" onChange={e => setUsername(e.target.value)} type="text" />
           <input value={password} placeholder="password" onChange={e => setPassword(e.target.value)} type="password" />
@@ -34,11 +36,12 @@ export default function RegistrationPage() {
             onChange={e => setMatchPassword(e.target.value)}
             type="password"
           />
+          <div className={css.matchMessage}>{!isMatched && "Passwords do not match. Try again"}</div>
           <button type="submit" className={css.submitBtn}>
             Sign up
           </button>
         </form>
-        <a onClick={() => navigate("/auth/login")}>Sign in</a>
+        <Link to="/auth/login">Sign in</Link>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../api/auth";
 import css from "./LoginAndRegisterPage.module.css";
 export default function LoginPage() {
@@ -16,7 +16,7 @@ export default function LoginPage() {
   return (
     <div className={css.mainContainer}>
       <div className={css.formBlock}>
-        <h1>AUTHORIZATION</h1>
+        <h1>authorization</h1>
         <form onSubmit={handleSubmit}>
           <input value={username} placeholder="username" onChange={e => setUsername(e.target.value)} type="text" />
           <input value={password} placeholder="password" onChange={e => setPassword(e.target.value)} type="password" />
@@ -24,7 +24,7 @@ export default function LoginPage() {
             Sign in
           </button>
         </form>
-        <a onClick={() => navigate("/auth/register")}>Sign up</a>
+        <Link to="/auth/register">Sign up</Link>
       </div>
     </div>
   );
