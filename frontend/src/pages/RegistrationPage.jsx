@@ -17,7 +17,7 @@ export default function RegistrationPage() {
     }
     try {
       setIsMatched(true);
-      await register({ username, password });
+      const { data } = await register({ username, password });
       navigate("/app");
     } catch (error) {
       console.log(error);

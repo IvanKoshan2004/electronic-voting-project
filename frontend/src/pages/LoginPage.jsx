@@ -9,7 +9,7 @@ export default function LoginPage() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    await login({ username, password });
+    const { data } = await login({ username, password });
     navigate("/app");
   };
 
