@@ -32,7 +32,9 @@ contract ElectionFactory {
         nextBallotId = 0;
     }
 
-    function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner {
+    event BallotCreated(uint256 _id, uint256 _createTime, uint256 _endTime);
+
+    function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner returns (Ballot memory) {
 
         // check for a number of elements in given array (min. 2 candidates, max. - 10)
         require(_candidateNames.length >= 2 && _candidateNames.length <= 10, "Invalid number of candidates");
@@ -48,6 +50,8 @@ contract ElectionFactory {
         for(uint i = 0; i < _candidateNames.length; i++) { // takes array of strings (candidate names) and converts it to array of structs (id + name)
             newBallot.candidates.push(Candidate(uint8(i), _candidateNames[i]));
         }
+
+        emit BallotCreated(newBallot.id, newBallot.createTime, newBallot.endTime);
     }
 
 

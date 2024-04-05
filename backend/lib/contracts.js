@@ -6,6 +6,7 @@ const { abi } = importJson("./artifacts/contracts/ElectionFactory.sol/ElectionFa
 
 // Local development environment
 const provider = new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+provider.pollingInterval = 1000;
 const signer = new ethers.Wallet(env.PRIVATE_KEY, provider);
 
 export const ElectionFactoryContract = new ethers.Contract(env.ELECTION_FACTORY_CONTRACT_ADDRESS, abi, signer);
