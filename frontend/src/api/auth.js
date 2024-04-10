@@ -12,21 +12,21 @@ axios.interceptors.response.use(
 );
 
 export const login = async userData => {
-  const { data } = await axios.post("/auth/login", userData);
+  const data = await axios.post("/auth/login", userData);
   return data;
 };
 
 export const register = async userData => {
-  const { data } = await axios.post("/auth/register", userData);
+  const data = await axios.post("/auth/register", userData);
   return data;
 };
 
 export const logout = async () => {
-  const { data } = await axios.post("/auth/logout");
+  const data = await axios.post("/auth/logout");
   return data;
 };
 
 export const currentAuth = async () => {
-  const { data } = await axios.get("/auth/current");
+  const data = await axios.get("/auth/current");
   return data;
 };

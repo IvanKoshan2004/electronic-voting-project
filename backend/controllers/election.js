@@ -4,9 +4,23 @@ import { electionFactoryService } from "../services/electionService.js";
 const createElection = async (req, res, next) => {
   try {
     const { name, description, votingTime, candidateNames } = req.body;
-    await electionFactoryService.createBallot(name, description, votingTime, candidateNames);
+    const { id, createTime, endTime } = await electionFactoryService.createBallot(
+      name,
+      description,
+      votingTime,
+      candidateNames,
+    );
 
-    return res.send(createApiResponse(req.body));
+    return res.send(
+      createApiResponse({
+        id,
+        name,
+        description,
+        candidateNames,
+        createTime,
+        endTime,
+      }),
+    );
   } catch (e) {
     return next(error);
   }

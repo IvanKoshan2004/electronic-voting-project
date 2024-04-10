@@ -1,5 +1,6 @@
-import { createContext, useState, useCallback } from "react";
+import { createContext, useState, useCallback, useEffect } from "react";
 import { currentAuth } from "../api/auth";
+import { useLocation } from "react-router-dom";
 
 export const AuthContext = createContext(null);
 
@@ -18,6 +19,12 @@ export const AuthProvider = ({ children }) => {
     setUser(data.user);
     setHasFetched(true);
   }, []);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setHasFetched(false);
+  }, [location]);
 
   return <AuthContext.Provider value={{ checkAuth, user, hasFetched }}>{children}</AuthContext.Provider>;
 };
