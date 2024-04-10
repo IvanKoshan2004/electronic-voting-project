@@ -11,9 +11,7 @@ export default function RegistrationPage() {
   const isMatched = password === matchPassword;
   const handleSubmit = async e => {
     e.preventDefault();
-    if (password !== matchPassword) {
-      return;
-    }
+    if (!isMatched) return;
     try {
       const { data } = await register({ username, password });
       navigate("/app");
