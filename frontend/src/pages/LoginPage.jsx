@@ -6,13 +6,16 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isSuccess, setIsSuccess] = useState(true);
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const { data } = await login({ username, password });
-    navigate("/app");
+    const user = await login({ username, password });
+    setIsSuccess(user.data.success);
+    if (user.data.success) {
+      navigate("/app");
+    }
   };
-
   return (
     <div className={css.mainContainer}>
       <div className={css.formBlock}>
@@ -20,9 +23,8 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <input value={username} placeholder="username" onChange={e => setUsername(e.target.value)} type="text" />
           <input value={password} placeholder="password" onChange={e => setPassword(e.target.value)} type="password" />
-          <button type="submit" className={css.submitBtn}>
-            Sign in
-          </button>
+          <div className={css.matchMessage}>{!isSuccess && "Wrong username or password"}</div>
+          <input type="submit" className={css.submitBtn} value={"Sign in"} />
         </form>
         <Link to="/auth/register">Sign up</Link>
       </div>
