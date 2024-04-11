@@ -11,6 +11,7 @@ module.exports = {
       PRIVATE_KEY: z.string(),
       ELECTION_FACTORY_CONTRACT_ADDRESS: z.string(),
       FRONTEND_URL: z.string(),
+      JWT_SECRET: z.string(),
     })
     .parse(process.env),
 };

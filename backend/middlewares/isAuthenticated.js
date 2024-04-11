@@ -1,13 +1,17 @@
 import { HttpError } from "../helpers/HttpError.js";
 import { prisma } from "../lib/db.js";
+import jwt from "jsonwebtoken";
+
+const { JWT_SECRET } = process.env;
 
 export const isAuthenticated = async (req, res, next) => {
   try {
-    const { user } = req.cookies;
-    if (!user) {
+    const token = req.cookies.token;
+    if (!token) {
       return next(HttpError(401));
     }
-    const { id } = JSON.parse(user);
+    const { id } = jwt.verify(token, JWT_SECRET);
+
     const dbUser = prisma.user.findFirst({
       where: {
         id,

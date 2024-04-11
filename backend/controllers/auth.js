@@ -1,20 +1,32 @@
 import { HttpError } from "../helpers/HttpError.js";
 import { createApiResponse } from "../helpers/createApiResponse.js";
 import { prisma } from "../lib/db.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
+const { JWT_SECRET } = process.env;
 
 const register = async (req, res, next) => {
   try {
     const { username, password } = req.body;
+
+    const hashPassword = await bcrypt.hash(password, 10);
+
     const user = await prisma.user.create({
       data: {
-        password,
+        password: hashPassword,
         username,
       },
     });
+
+    const payload = {
+      id: user.id,
+    };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
     return res
-      .cookie("user", JSON.stringify({ username: user.username, id: user.id }), {
+      .cookie("token", token, {
         maxAge: COOKIE_MAX_AGE_MILISECONDS,
       })
       .json(createApiResponse({ user: { username: user.username, id: user.id } }));
@@ -29,15 +41,24 @@ const login = async (req, res, next) => {
     const user = await prisma.user.findFirst({
       where: {
         username,
-        password,
       },
     });
     if (!user) {
       throw HttpError(401, { message: "Email or password is wrong" });
     }
 
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+      throw HttpError(401, "Email or password is wrong");
+    }
+
+    const payload = {
+      id: user.id,
+    };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
     return res
-      .cookie("user", JSON.stringify({ username: user.username, id: user.id }))
+      .cookie("token", token)
       .status(200)
       .send(
         createApiResponse({
@@ -54,7 +75,7 @@ const logout = async (req, res, next) => {
   try {
     return res
       .status(200)
-      .cookie("user", "")
+      .cookie("token", "")
       .send(
         createApiResponse({
           message: "Successfully logout",
@@ -67,7 +88,8 @@ const logout = async (req, res, next) => {
 
 const getCurrent = async (req, res, next) => {
   try {
-    const { id } = JSON.parse(req.cookies.user);
+    const token = req.cookies.token;
+    const { id } = jwt.verify(token, JWT_SECRET);
     const user = await prisma.user.findFirst({ where: { id } });
 
     return res.status(200).send(createApiResponse({ user: { username: user.username, id: user.id } }));
