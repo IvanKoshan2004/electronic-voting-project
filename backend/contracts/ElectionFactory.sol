@@ -14,6 +14,7 @@ contract ElectionFactory {
         uint256 id;
         uint256 createTime;
         uint256 endTime;
+        string creatorId;
         string name;
         string description;
         Candidate[] candidates;
@@ -40,7 +41,7 @@ contract ElectionFactory {
 
     event BallotCreated(uint256 _id, uint256 _createTime, uint256 _endTime);
 
-    function createBallot(string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner {
+    function createBallot(string memory _creatorId, string memory _name, string memory _description, uint256 _votingTime, string[] memory _candidateNames) public onlyOwner {
 
         // check for a number of elements in given array (min. 2 candidates, max. - 10)
         require(_candidateNames.length >= 2 && _candidateNames.length <= 10, "Invalid number of candidates");
@@ -52,6 +53,7 @@ contract ElectionFactory {
         newBallot.description = _description;
         newBallot.createTime = block.timestamp;
         newBallot.endTime = newBallot.createTime + _votingTime;
+        newBallot.creatorId = _creatorId;
 
         for (uint i = 0; i < _candidateNames.length; i++) { // takes array of strings (candidate names) and converts it to array of structs (id + name)
             newBallot.candidates.push(Candidate(uint8(i), _candidateNames[i]));
@@ -63,50 +65,112 @@ contract ElectionFactory {
     event VoteSuccess();
     event VoteFail();
 
-    function voteForCandidate(uint256 ballotId, uint8 candidateId, string memory voterId) public onlyOwner() {
-        require(ballots[ballotId].endTime < block.timestamp, "Can't vote after election has ended");
+    function voteForCandidate(uint256 _ballotId, uint8 _candidateId, string memory _voterId) public onlyOwner() {
+        require(ballots[_ballotId].endTime < block.timestamp, "Can't vote after election has ended");
 
         bool hasVoted = false;
-        for (uint256 i = 0; i < ballotsVotes[ballotId].voters.length; i++) {
-            if (keccak256(bytes(ballotsVotes[ballotId].voters[i])) == keccak256(bytes(candidateId))) {
+        for (uint256 i = 0; i < ballotsVotes[_ballotId].voters.length; i++) {
+            if (keccak256(bytes(ballotsVotes[_ballotId].voters[i])) == keccak256(bytes(_voterId))) {
                 hasVoted = true;
                 break;
             }
         }
 
-        // If the candidate hasn't voted yet, record the vote
         if (!hasVoted) {
-            ballotsVotes[ballotId].voteCounts[candidateId]++;
-            ballotsVotes[ballotId].voters.push(voterId);
+            ballotsVotes[_ballotId].voteCounts[_candidateId]++;
+            ballotsVotes[_ballotId].voters.push(_voterId);
             emit VoteSuccess();
         }
         else {
             emit VoteFail();
         }
     }
+
     struct CandidateVotes {
         uint8 candidateId;
         uint256 votesCount;
     }
 
-    function getBallotVotes(uint256 ballotId) public view onlyOwner() returns (CandidateVotes[] memory) {
-        uint256 candidateCount = ballots[ballotId].candidates.length;
+    function getBallotVotesById(uint256 _ballotId) public view onlyOwner() returns (CandidateVotes[] memory) {
+        uint256 candidateCount = ballots[_ballotId].candidates.length;
         CandidateVotes[] memory allCandidateVotes = new CandidateVotes[](candidateCount);
         for (uint256 i = 0; i < candidateCount; i++) {
-            Candidate memory candidate = ballots[ballotId].candidates[i];
-            allCandidateVotes[i] = CandidateVotes(candidate.id, ballotsVotes[ballotId].voteCounts[candidate.id]);
+            Candidate memory candidate = ballots[_ballotId].candidates[i];
+            allCandidateVotes[i] = CandidateVotes(candidate.id, ballotsVotes[_ballotId].voteCounts[candidate.id]);
         }
         return allCandidateVotes;
     }
 
-    // Demonstration function
-    function getAllBallots() public view returns (Ballot[] memory) {
-        Ballot[] memory allBallots = new Ballot[](nextBallotId - 1);
+    struct BallotShortInfo {
+        uint256 id;
+        uint256 createTime;
+        uint256 endTime;
+        string creatorId;
+        string name;
+        string description;  
+        bool ended;
+        uint8 winnerCandidate;
+    }
+
+    function getBallotShortInfoById(uint256 _ballotId) public view returns (BallotShortInfo memory) {\
+        BallotShortInfo memory info;
+        info.id = ballots[_ballotId].id;
+        info.createTime = ballots[_ballotId].createTime;
+        info.endTime = ballots[_ballotId].endTime;
+        info.creatorId = ballots[_ballotId].creatorId;
+        info.name = ballots[_ballotId].name;
+        info.description = ballots[_ballotId].description;
+        info.ended = ballots[_ballotId].endTime < block.timestamp;
+        if (info.ended) {
+            info.winnerCandidate = getBallotWinner(ballots[_ballotId].id);
+        }
+        return info;
+    }
+
+    function getAllBallots() public view returns (BallotShortInfo[] memory) {
+        BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](getBallotsCount());
 
         for (uint256 i = 1; i < nextBallotId; i++) {
-            allBallots[i - 1] = ballots[i];
+            BallotShortInfo memory info;
+            info.id = ballots[i].id;
+            info.createTime = ballots[i].createTime;
+            info.endTime = ballots[i].endTime;
+            info.creatorId = ballots[i].creatorId;
+            info.name = ballots[i].name;
+            info.description = ballots[i].description;
+            info.ended = ballots[i].endTime < block.timestamp;
+            if (info.ended) {
+                info.winnerCandidate = getBallotWinner(ballots[i].id);
+            }
+            ballotsInfo[i - 1] = info;
         }
 
-        return allBallots;
+        return ballotsInfo;
+    }
+    function getBallotWinner(uint256 _ballotId) public view returns (uint8) {
+        require(ballots[_ballotId].endTime > block.timestamp, "ballot has not ended yet");
+
+        uint256 candidateCount = ballots[_ballotId].candidates.length;
+        uint256 maxVotes = 0;
+        uint8 maxVotesId = 255;
+        for (uint256 i = 0; i < candidateCount; i++) {
+            Candidate memory candidate = ballots[_ballotId].candidates[i];
+            uint256 currentVotes = ballotsVotes[_ballotId].voteCounts[candidate.id];
+            if (currentVotes >= maxVotes) {
+                maxVotes = currentVotes;
+                maxVotesId = candidate.id;
+            }
+        }
+        return maxVotesId;
+    }
+
+    function getBallotCandidateById(uint256 _ballotId, uint8 _candidateId) public view returns (string memory) {
+        return ballots[_ballotId].candidates[_candidateId].name;
+    }
+    function getBallotsCount() public view returns (uint256) {
+        return nextBallotId;
+    }
+    function getCurrentBlockchainTimestamp() public view returns (uint256) {
+        return block.timestamp;
     }
 }
