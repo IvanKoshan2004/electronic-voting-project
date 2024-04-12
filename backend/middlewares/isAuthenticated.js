@@ -11,13 +11,7 @@ export const isAuthenticated = async (req, res, next) => {
       return next(HttpError(401));
     }
     const { id } = jwt.verify(token, JWT_SECRET);
-
-    const dbUser = prisma.user.findFirst({
-      where: {
-        id,
-      },
-    });
-    if (!dbUser) {
+    if (!id) {
       return next(HttpError(401));
     }
     next();
