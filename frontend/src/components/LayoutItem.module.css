@@ -1,0 +1,29 @@
+.item {
+  cursor: pointer;
+  background-color: #c5ced2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px 20px 20px 0px;
+  flex-grow: 1;
+  padding: 0 15px;
+  text-decoration: none;
+  color: #000;
+  transition: background-color 250ms ease-in-out;
+}
+
+.item:hover,
+.item:active {
+  background-color: #809299;
+}
+
+.item_text {
+  font-size: 24px;
+  text-wrap: wrap;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.item_active {
+  background-color: #a1b2b9;
+}

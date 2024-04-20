@@ -1,5 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
+import { MenuItem } from "../components/MenuItem";
 import { logout } from "../api/auth";
+import css from "././AppLayout.module.css";
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -10,12 +12,19 @@ export default function AppLayout() {
   };
 
   return (
-    <div>
-      App layout hi there
-      <button onClick={handleLogout} type="button">
-        Logout
-      </button>
-      <Outlet />
+    <div className={css.backdrop}>
+      <div className={css.container}>
+        <nav className={css.menu}>
+          <MenuItem route="/app/ballots" title="My Ballots" />
+          <MenuItem route="/app/available-votings" title="Available Votings" />
+          <MenuItem route="/app/ended-votings" title="Ended Votings" />
+          <MenuItem route="/app/create-voting" title="Create new voting" />
+          <MenuItem title="Log out" onClick={handleLogout} />
+        </nav>
+        <div className={css.content}>
+          <Outlet />
+        </div>
+      </div>
     </div>
   );
 }
