@@ -1,6 +1,6 @@
 # About
 
-This is a electric voting application based on blockchain.
+This is an electronic voting application based on blockchain.
 
 ## How to run
 
