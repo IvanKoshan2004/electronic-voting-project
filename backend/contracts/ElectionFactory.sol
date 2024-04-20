@@ -66,7 +66,7 @@ contract ElectionFactory {
     event VoteFail();
 
     function voteForCandidate(uint256 _ballotId, uint8 _candidateId, string memory _voterId) public onlyOwner() {
-        require(ballots[_ballotId].endTime < block.timestamp, "Cannot vote after election has ended");
+        require(ballots[_ballotId].endTime > block.timestamp, "Cannot vote after election has ended");
 
         bool hasVoted = false;
         for (uint256 i = 0; i < ballotsVotes[_ballotId].voters.length; i++) {
