@@ -1,0 +1,81 @@
+.mainBlock {
+  height: 85vh;
+  width: 80vw;
+  padding-left: 200px;
+  padding-right: 200px;
+  background-color: #d9d9d9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+}
+
+.formBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+  gap: 40px;
+}
+
+.formBlock input {
+  width: 100%;
+  height: 49px;
+  padding-left: 20px;
+  font-weight: 400;
+  background-color: rgb(142, 142, 142, 0.1);
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+}
+.formBlock input::placeholder {
+  font-size: 24px;
+  color: #000000;
+}
+
+.inputBlock {
+  width: 100%;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.creatingHeader {
+  font-size: 64px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.inputDescription {
+  font-size: 24px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.candidateBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.candidateNumberBlock {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.candidateCount {
+  width: 5%;
+  padding: 3px 13px;
+  font-size: 24px;
+  border-radius: 20px;
+  background-color: rgb(142, 142, 142, 0.1);
+}
+.createBtn {
+  width: 30%;
+  padding: 23px 93px;
+  background-color: #000000;
+  color: #d9d9d9;
+  font-size: 24px;
+  border: none;
+  border-radius: 40px;
+  text-transform: uppercase;
+}

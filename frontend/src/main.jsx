@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import RootLayout from "./layouts/RootLayout";
 import { PrivateRoute } from "./components/PrivateRoute";
 import "./global.css";
+import CreateVotingPage from "./pages/CreateVotingPage";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
             <AppLayout />
           </PrivateRoute>
         ),
+      },
+      {
+        path: "create",
+        element: <CreateVotingPage />,
       },
       {
         path: "auth/",
