@@ -9,7 +9,10 @@ import { AuthProvider } from "./contexts/AuthContext";
 import RootLayout from "./layouts/RootLayout";
 import { PrivateRoute } from "./components/PrivateRoute";
 import "./global.css";
-import CreateVotingPage from "./pages/CreateVotingPage";
+import { BallotsPage } from "./pages/BallotsPage";
+import { AvailableVotings } from "./pages/AvailableVotings";
+import { EndedVotings } from "./pages/EndedVotings";
+import { CreateVotingPage } from "./pages/CreateVotingPage";
 
 const router = createBrowserRouter([
   {
@@ -31,10 +34,40 @@ const router = createBrowserRouter([
             <AppLayout />
           </PrivateRoute>
         ),
-      },
-      {
-        path: "create",
-        element: <CreateVotingPage />,
+        children: [
+          {
+            path: "ballots",
+            element: (
+              <PrivateRoute redirectTo="/auth/login">
+                <BallotsPage />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "available-votings",
+            element: (
+              <PrivateRoute redirectTo="/auth/login">
+                <AvailableVotings />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "ended-votings",
+            element: (
+              <PrivateRoute redirectTo="/auth/login">
+                <EndedVotings />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "create-voting",
+            element: (
+              <PrivateRoute redirectTo="/auth/login">
+                <CreateVotingPage />
+              </PrivateRoute>
+            ),
+          },
+        ],
       },
       {
         path: "auth/",

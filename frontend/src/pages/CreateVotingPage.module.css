@@ -25,13 +25,13 @@
   height: 49px;
   padding-left: 20px;
   font-weight: 400;
+  font-size: 1.5rem;
   background-color: rgb(142, 142, 142, 0.1);
   border: none;
   border-radius: 40px;
   cursor: pointer;
 }
 .formBlock input::placeholder {
-  font-size: 24px;
   color: #000000;
 }
 
