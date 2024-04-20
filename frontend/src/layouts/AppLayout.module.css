@@ -13,10 +13,11 @@
   overflow-x: hidden;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .menu {
-  width: fit-content;
+  width: 200px;
   display: flex;
   flex-direction: column;
   gap: 5px;

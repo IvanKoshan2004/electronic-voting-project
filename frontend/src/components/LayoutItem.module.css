@@ -9,10 +9,12 @@
   padding: 0 15px;
   text-decoration: none;
   color: #000;
+  transition: background-color 250ms ease-in-out;
 }
 
-.item_top {
-  border-top-left-radius: 20px;
+.item:hover,
+.item:active {
+  background-color: #809299;
 }
 
 .item_text {
@@ -20,18 +22,8 @@
   text-wrap: wrap;
   text-align: center;
   text-transform: uppercase;
-  max-width: 150px;
 }
 
 .item_active {
   background-color: #a1b2b9;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0px 20px 20px 0px;
-  flex-grow: 1;
-  padding: 0 15px;
-  text-decoration: none;
-  color: #000;
 }
