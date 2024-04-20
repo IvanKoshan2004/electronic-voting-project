@@ -66,7 +66,7 @@ contract ElectionFactory {
     event VoteFail();
 
     function voteForCandidate(uint256 _ballotId, uint8 _candidateId, string memory _voterId) public onlyOwner() {
-        require(ballots[_ballotId].endTime < block.timestamp, "Can't vote after election has ended");
+        require(ballots[_ballotId].endTime < block.timestamp, "Cannot vote after election has ended");
 
         bool hasVoted = false;
         for (uint256 i = 0; i < ballotsVotes[_ballotId].voters.length; i++) {
@@ -112,7 +112,7 @@ contract ElectionFactory {
         uint8 winnerCandidate;
     }
 
-    function getBallotShortInfoById(uint256 _ballotId) public view returns (BallotShortInfo memory) {\
+    function getBallotShortInfoById(uint256 _ballotId) public view returns (BallotShortInfo memory) {
         BallotShortInfo memory info;
         info.id = ballots[_ballotId].id;
         info.createTime = ballots[_ballotId].createTime;
@@ -148,7 +148,7 @@ contract ElectionFactory {
         return ballotsInfo;
     }
     function getBallotWinner(uint256 _ballotId) public view returns (uint8) {
-        require(ballots[_ballotId].endTime > block.timestamp, "ballot has not ended yet");
+        require(ballots[_ballotId].endTime > block.timestamp, "Ballot has not ended yet");
 
         uint256 candidateCount = ballots[_ballotId].candidates.length;
         uint256 maxVotes = 0;
