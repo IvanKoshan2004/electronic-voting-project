@@ -148,7 +148,7 @@ contract ElectionFactory {
         return ballotsInfo;
     }
     function getBallotWinner(uint256 _ballotId) public view returns (uint8) {
-        require(ballots[_ballotId].endTime > block.timestamp, "Ballot has not ended yet");
+        require(ballots[_ballotId].endTime < block.timestamp, "Ballot has not ended yet");
 
         uint256 candidateCount = ballots[_ballotId].candidates.length;
         uint256 maxVotes = 0;
