@@ -1,0 +1,29 @@
+.backdrop {
+  background-color: #18739a;
+  width: 100%;
+  height: 100%;
+  padding: 140px 200px 0 200px;
+}
+
+.container {
+  background-color: #b3c5cd;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  display: flex;
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.menu {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: 100%;
+}
+
+.content {
+  overflow-y: hidden;
+  width: 100%;
+}
