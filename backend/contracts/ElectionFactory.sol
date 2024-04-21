@@ -123,7 +123,6 @@ contract ElectionFactory {
         }
         return info;
     }
-
     function getAllBallots() public view returns (BallotShortInfo[] memory) {
         BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](nextBallotId);
 
@@ -160,7 +159,6 @@ contract ElectionFactory {
         }
         return maxVotesId;
     }
-
     function getBallotCandidateById(uint256 _ballotId, uint8 _candidateId) public view returns (string memory) {
         return ballots[_ballotId].candidates[_candidateId].name;
     }
