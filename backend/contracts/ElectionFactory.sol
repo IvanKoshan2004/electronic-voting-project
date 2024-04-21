@@ -128,7 +128,7 @@ contract ElectionFactory {
     }
 
     function getAllBallots() public view returns (BallotShortInfo[] memory) {
-        BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](getBallotsCount());
+        BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](nextBallotId);
 
         for (uint256 i = 0; i < nextBallotId; i++) {
             BallotShortInfo memory info;
