@@ -34,7 +34,9 @@
 .formBlock input::placeholder {
   color: #000000;
 }
-
+.formBlock input:focus {
+  outline: none;
+}
 .inputBlock {
   width: 100%;
   gap: 10px;
@@ -68,6 +70,9 @@
   font-size: 24px;
   border-radius: 20px;
   background-color: rgb(142, 142, 142, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .createBtn {
   width: 30%;
@@ -78,4 +83,18 @@
   border: none;
   border-radius: 40px;
   text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.createBtn:disabled {
+  background-color: rgb(0, 0, 0, 0.5);
+}
+
+.errorMessage {
+  font-size: 16px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #a00000;
 }
