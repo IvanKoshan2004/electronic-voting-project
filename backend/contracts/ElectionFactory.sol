@@ -130,7 +130,7 @@ contract ElectionFactory {
     function getAllBallots() public view returns (BallotShortInfo[] memory) {
         BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](getBallotsCount());
 
-        for (uint256 i = 1; i < nextBallotId; i++) {
+        for (uint256 i = 0; i < nextBallotId; i++) {
             BallotShortInfo memory info;
             info.id = ballots[i].id;
             info.createTime = ballots[i].createTime;
@@ -142,7 +142,7 @@ contract ElectionFactory {
             if (info.ended) {
                 info.winnerCandidate = getBallotWinner(ballots[i].id);
             }
-            ballotsInfo[i - 1] = info;
+            ballotsInfo[i] = info;
         }
 
         return ballotsInfo;
