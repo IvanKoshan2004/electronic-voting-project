@@ -7,8 +7,6 @@ export function CreateVotingPage() {
     { id: 1, value: "" },
     { id: 2, value: "" },
   ]);
-  const [convertedTime, setConvertedTime] = useState("");
-  const [clearCandidates, setClearCandidates] = useState([]);
   const idCounterRef = useRef(3);
   const {
     handleSubmit,
@@ -17,22 +15,25 @@ export function CreateVotingPage() {
   } = useForm({
     mode: "onBlur",
   });
-  console.log(fields);
+
   const onSubmit = function (data) {
-    const splitedTime = data.time.split(":").map(Number);
-    setConvertedTime(splitedTime[0] * 86400 + splitedTime[1] * 3600 + splitedTime[2] * 60 + splitedTime[3]);
-    setClearCandidates(data.candidates.filter(candidate => candidate));
+    const splitTime = data.time.split(":").map(Number);
+    const votingTime = splitTime[0] * 86400 + splitTime[1] * 3600 + splitTime[2] * 60 + splitTime[3];
+    const candidates = data.candidates.filter(candidate => candidate);
+    // TODO: api call
+    console.log(data);
   };
   const handleChange = function (id, value) {
     const newFields = [...fields];
-    const index = newFields.findIndex(field => field.id === id);
+    const index = newFields.findIndex(el => el.id === id);
     newFields[index].value = value;
-    if (index === fields.length - 1 && index < 9 && value !== "") {
-      newFields.push({ id: idCounterRef.current, value: "" });
-      idCounterRef.current++;
-    }
-    if (value === "" && newFields.length > 2) {
-      newFields.splice(index, 1);
+
+    const emptyIndex = newFields.findIndex(el => el.value === "");
+    if (emptyIndex !== -1 && newFields.length > 2) newFields.splice(emptyIndex, 1);
+
+    const nonEmptyCount = newFields.filter(el => el.value).length;
+    if (nonEmptyCount === newFields.length && newFields.length < 10) {
+      newFields.push({ id: idCounterRef.current++, value: "" });
     }
     setFields(newFields);
   };
@@ -75,19 +76,21 @@ export function CreateVotingPage() {
           <p className={css.inputDescription}>number of candidates (2-10):</p>
           <div className={css.candidateCount}>{fields.length}</div>
         </div>
-        {fields.map((field, index) => (
-          <div key={field.id}>
-            <input
-              type="text"
-              {...register(`candidates.${index}`, {
-                required: fields.length < 3 ? true : false,
-              })}
-              value={field.value}
-              onChange={e => handleChange(field.id, e.target.value)}
-              placeholder="enter your candidate here..."
-            />
-          </div>
-        ))}
+        {fields.map((field, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="text"
+                {...register(`candidates.${index}`, {
+                  required: fields.length < 3 ? true : false,
+                })}
+                value={field.value}
+                onChange={e => handleChange(field.id, e.target.value)}
+                placeholder="enter your candidate here..."
+              />
+            </div>
+          );
+        })}
       </div>
       <button type="submit" className={css.createBtn} disabled={!isValid}>
         Create

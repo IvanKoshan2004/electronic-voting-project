@@ -85,9 +85,12 @@
   justify-content: center;
   align-items: center;
 }
-
+.createBtn:hover {
+  background-color: #333;
+}
 .createBtn:disabled {
   background-color: rgb(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0, 0.5);
 }
 
 .errorMessage {
