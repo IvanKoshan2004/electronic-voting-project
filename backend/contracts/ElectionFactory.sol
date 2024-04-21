@@ -63,27 +63,24 @@ contract ElectionFactory {
     }
 
     event VoteSuccess();
-    event VoteFail();
 
-    function voteForCandidate(uint256 _ballotId, uint8 _candidateId, string memory _voterId) public onlyOwner() {
-        require(ballots[_ballotId].endTime > block.timestamp, "Cannot vote after election has ended");
-
-        bool hasVoted = false;
+    function hasVoted(uint256 _ballotId, string memory _voterId) private view returns (bool) {
         for (uint256 i = 0; i < ballotsVotes[_ballotId].voters.length; i++) {
             if (keccak256(bytes(ballotsVotes[_ballotId].voters[i])) == keccak256(bytes(_voterId))) {
-                hasVoted = true;
-                break;
+                return true;
             }
         }
+        return false;
+    }
 
-        if (!hasVoted) {
-            ballotsVotes[_ballotId].voteCounts[_candidateId]++;
-            ballotsVotes[_ballotId].voters.push(_voterId);
-            emit VoteSuccess();
-        }
-        else {
-            emit VoteFail();
-        }
+    function voteForCandidate(uint256 _ballotId, uint8 _candidateId, string memory _voterId) public onlyOwner() {
+        require(keccak256(bytes(_voterId)) != keccak256(bytes(ballots[_ballotId].creatorId)), "Creator cannot vote");
+        require(!hasVoted(_ballotId, _voterId), "Voter has already voted");
+        require(ballots[_ballotId].endTime > block.timestamp, "Cannot vote after election has ended");
+
+        ballotsVotes[_ballotId].voteCounts[_candidateId]++;
+        ballotsVotes[_ballotId].voters.push(_voterId);
+        emit VoteSuccess();
     }
 
     struct CandidateVotes {
