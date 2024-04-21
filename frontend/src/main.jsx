@@ -12,7 +12,7 @@ import "./global.css";
 import { BallotsPage } from "./pages/BallotsPage";
 import { AvailableVotings } from "./pages/AvailableVotings";
 import { EndedVotings } from "./pages/EndedVotings";
-import { CreateVoting } from "./pages/CreateVoting";
+import { CreateVotingPage } from "./pages/CreateVotingPage";
 
 const router = createBrowserRouter([
   {
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
             path: "create-voting",
             element: (
               <PrivateRoute redirectTo="/auth/login">
-                <CreateVoting />
+                <CreateVotingPage />
               </PrivateRoute>
             ),
           },

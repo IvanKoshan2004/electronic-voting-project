@@ -25,6 +25,12 @@
 }
 
 .content {
-  overflow-y: hidden;
+  overflow-y: auto;
   width: 100%;
+}
+
+.contentContainer {
+  margin-inline: auto;
+  padding: 69px 200px 69px 200px;
+  max-width: 1600px;
 }

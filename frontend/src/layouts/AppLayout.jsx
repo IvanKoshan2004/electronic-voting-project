@@ -22,7 +22,9 @@ export default function AppLayout() {
           <MenuItem title="Log out" onClick={handleLogout} />
         </nav>
         <div className={css.content}>
-          <Outlet />
+          <div className={css.contentContainer}>
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>
