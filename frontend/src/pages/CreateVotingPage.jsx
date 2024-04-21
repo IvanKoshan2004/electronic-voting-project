@@ -1,5 +1,5 @@
 import css from "./CreateVotingPage.module.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 export function CreateVotingPage() {
@@ -9,6 +9,7 @@ export function CreateVotingPage() {
   ]);
   const [convertedTime, setConvertedTime] = useState("");
   const [clearCandidates, setClearCandidates] = useState([]);
+  const idCounterRef = useRef(3);
   const {
     handleSubmit,
     register,
@@ -16,7 +17,7 @@ export function CreateVotingPage() {
   } = useForm({
     mode: "onBlur",
   });
-
+  console.log(fields);
   const onSubmit = function (data) {
     const splitedTime = data.time.split(":").map(Number);
     setConvertedTime(splitedTime[0] * 86400 + splitedTime[1] * 3600 + splitedTime[2] * 60 + splitedTime[3]);
@@ -27,7 +28,11 @@ export function CreateVotingPage() {
     const index = newFields.findIndex(field => field.id === id);
     newFields[index].value = value;
     if (index === fields.length - 1 && index < 9 && value !== "") {
-      newFields.push({ id: fields.length + 1, value: "" });
+      newFields.push({ id: idCounterRef.current, value: "" });
+      idCounterRef.current++;
+    }
+    if (value === "" && newFields.length > 2) {
+      newFields.splice(index, 1);
     }
     setFields(newFields);
   };
