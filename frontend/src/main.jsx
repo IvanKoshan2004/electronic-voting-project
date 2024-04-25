@@ -53,7 +53,7 @@ const router = createBrowserRouter([
             ),
           },
           {
-            path: "available-votings/:id",
+            path: "votings/:id",
             element: (
               <PrivateRoute redirectTo="/auth/login">
                 <VotingDetailsPage />
@@ -65,14 +65,6 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoute redirectTo="/auth/login">
                 <EndedVotings />
-              </PrivateRoute>
-            ),
-          },
-          {
-            path: "ended-votings/:id",
-            element: (
-              <PrivateRoute redirectTo="/auth/login">
-                <VotingDetailsPage />
               </PrivateRoute>
             ),
           },

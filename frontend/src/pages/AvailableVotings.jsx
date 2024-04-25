@@ -103,7 +103,11 @@ export const AvailableVotings = () => {
           .filter(voting => voting.endTime !== 0)
           .map((voting, index) => {
             return (
-              <div className={css.votingBlock} key={index} onClick={() => navigate(`${voting.id.toString()}`)}>
+              <div
+                className={css.votingBlock}
+                key={index}
+                onClick={() => navigate(`/app/votings/${voting.id.toString()}`)}
+              >
                 <div className={css.votingTime}>
                   <h4>time left:</h4>
                   <p>{timeConvert(voting.endTime)}</p>

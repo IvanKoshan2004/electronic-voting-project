@@ -96,7 +96,11 @@ export const EndedVotings = () => {
           .filter(voting => voting.endTime === 0)
           .map((voting, index) => {
             return (
-              <div className={css.votingBlock} key={index} onClick={() => navigate(`${voting.id.toString()}`)}>
+              <div
+                className={css.votingBlock}
+                key={index}
+                onClick={() => navigate(`/app/votings/${voting.id.toString()}`)}
+              >
                 <div className={css.votingDetails}>
                   <div className={css.headerContainer}>
                     <h3>{voting.name}</h3>
