@@ -2,6 +2,8 @@ import css from "./AvailableAndEndedVotings.module.css";
 import { useNavigate } from "react-router-dom";
 
 export const EndedVotings = () => {
+  const navigate = useNavigate();
+
   const votings = [
     {
       id: 1,
