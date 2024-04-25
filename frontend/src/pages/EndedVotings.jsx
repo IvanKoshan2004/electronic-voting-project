@@ -102,7 +102,7 @@ export const EndedVotings = () => {
                   </div>
                   <h4>{voting.winnerCandidate}</h4>
                 </div>
-                {/* <div className={css.votedFlag}></div> */}
+                {voting.isVoted && <div className={css.votedFlag}></div>}
               </div>
             );
           })}
