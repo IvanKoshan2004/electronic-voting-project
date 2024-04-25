@@ -70,21 +70,18 @@ class ElectionFactoryService {
   async getAllBallots() {
     try {
       const results = await ElectionFactoryContract.getAllBallots();
+      console.log(results);
       return results.map(result => {
-        const [id, createTime, endTime, name, description, candidates] = result;
+        const [id, createTime, endTime, creatorId, name, description, ended, winnerCandidate] = result;
         return {
           id: Number(id),
           createTime: Number(createTime),
           endTime: Number(endTime),
           name,
+          creatorId,
           description,
-          candidates: candidates.map(candidate => {
-            const [id, name] = candidate;
-            return {
-              id: Number(id),
-              name,
-            };
-          }),
+          ended,
+          winnerCandidate: ended ? Number(winnerCandidate) : null,
         };
       });
     } catch (e) {
