@@ -70,7 +70,6 @@ class ElectionFactoryService {
   async getAllBallots() {
     try {
       const results = await ElectionFactoryContract.getAllBallots();
-      console.log(results);
       return results.map(result => {
         const [id, createTime, endTime, creatorId, name, description, ended, winnerCandidate] = result;
         return {

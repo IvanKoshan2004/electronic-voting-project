@@ -13,6 +13,7 @@ import { BallotsPage } from "./pages/BallotsPage";
 import { AvailableVotings } from "./pages/AvailableVotings";
 import { EndedVotings } from "./pages/EndedVotings";
 import { CreateVotingPage } from "./pages/CreateVotingPage";
+import { VotingDetailsPage } from "./pages/VotingDetailsPage";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
             element: (
               <PrivateRoute redirectTo="/auth/login">
                 <AvailableVotings />
+              </PrivateRoute>
+            ),
+          },
+          {
+            path: "votings/:id",
+            element: (
+              <PrivateRoute redirectTo="/auth/login">
+                <VotingDetailsPage />
               </PrivateRoute>
             ),
           },
