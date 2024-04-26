@@ -165,7 +165,12 @@ contract ElectionFactory {
     function getBallotsCount() public view returns (uint256) {
         return nextBallotId;
     }
-    function getCurrentBlockchainTimestamp() public view returns (uint256) {
-        return block.timestamp;
+    
+    // start transaction to mine a new block to get current timestamp
+    uint256 timestampCount = 0;
+    event GetTimestamp(uint256 timestamp);
+    function getCurrentBlockchainTimestamp() public {
+        timestampCount = timestampCount + 1;
+        emit GetTimestamp(block.timestamp);
     }
 }

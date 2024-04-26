@@ -151,10 +151,13 @@ class ElectionFactoryService {
     }
   }
 
-  async getCurrentBlockchainTimestamp() {
+  async getCurrentBlockchainTimestampSecond() {
     try {
-      const result = await ElectionFactoryContract.getCurrentBlockchainTimestamp();
-      return { timestamp: Number(result) };
+      const transaction = await ElectionFactoryContract.getCurrentBlockchainTimestamp();
+      const receipt = await transaction.wait();
+      const timestampReceipt = parseElectionFactoryEvent(receipt, "GetTimestamp");
+      const [timestamp] = timestampReceipt;
+      return { timestampSecond: Number(timestamp) };
     } catch (e) {
       throw Error(e.reason || e.message);
     }
