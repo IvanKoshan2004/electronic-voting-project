@@ -3,11 +3,12 @@ import { electionFactoryService } from "../services/electionService.js";
 
 const createElection = async (req, res, next) => {
   try {
-    const { name, description, votingTime, candidateNames } = req.body;
+    const { name, description, votingTimeInSeconds, candidateNames, creatorId } = req.body;
     const { id, createTime, endTime } = await electionFactoryService.createBallot(
+      creatorId,
       name,
       description,
-      votingTime,
+      votingTimeInSeconds,
       candidateNames,
     );
 
