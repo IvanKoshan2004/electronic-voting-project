@@ -1,5 +1,7 @@
 import { createApiResponse } from "../helpers/createApiResponse.js";
+import { blockchainClock } from "../services/BlockchainClock.js";
 import { electionFactoryService } from "../services/electionService.js";
+import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
 
 const createElection = async (req, res, next) => {
   try {
@@ -18,8 +20,8 @@ const createElection = async (req, res, next) => {
         name,
         description,
         candidateNames,
-        createTime,
-        endTime,
+        createTime: toMilisecondsFromSeconds(createTime),
+        endTime: toMilisecondsFromSeconds(endTime),
       }),
     );
   } catch (e) {
@@ -27,4 +29,57 @@ const createElection = async (req, res, next) => {
   }
 };
 
-export default { createElection };
+const getActiveElections = async (req, res, next) => {
+  const elections = await electionFactoryService.getAllBallots();
+  const timestamp = blockchainClock.getTimestamp();
+  const filteredElections = elections.filter(election => {
+    if (election.ended) {
+      return false;
+    }
+    if ((toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000 < 1) {
+      return false;
+    }
+
+    return true;
+  });
+  return res.send(
+    createApiResponse({
+      elections: filteredElections.map(election => {
+        return {
+          ...election,
+          createTime: toMilisecondsFromSeconds(election.createTime),
+          endTime: toMilisecondsFromSeconds(election.endTime),
+          timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
+        };
+      }),
+    }),
+  );
+};
+
+const getInactiveElections = async (req, res, next) => {
+  const elections = await electionFactoryService.getAllBallots();
+  const timestamp = blockchainClock.getTimestamp();
+  const filteredElections = elections.filter(election => {
+    if (election.ended) {
+      return true;
+    }
+    if ((toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000 <= 0) {
+      return true;
+    }
+
+    return false;
+  });
+  return res.send(
+    createApiResponse({
+      elections: filteredElections.map(election => {
+        return {
+          ...election,
+          createTime: toMilisecondsFromSeconds(election.createTime),
+          endTime: toMilisecondsFromSeconds(election.endTime),
+        };
+      }),
+    }),
+  );
+};
+
+export default { createElection, getActiveElections, getInactiveElections };
