@@ -3,9 +3,6 @@ import electionController from "../controllers/election.js";
 import { isAuthenticated } from "../middlewares/isAuthenticated.js";
 import { electionSchema } from "../validation/electionSchema.js";
 import { validateBody } from "../middlewares/validateBody.js";
-import { electionFactoryService } from "../services/electionService.js";
-import { createApiResponse } from "../helpers/createApiResponse.js";
-import { blockchainClock } from "../services/BlockchainClock.js";
 
 const electionRouter = Router();
 

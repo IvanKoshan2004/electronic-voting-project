@@ -5,7 +5,8 @@ import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
 
 const createElection = async (req, res, next) => {
   try {
-    const { name, description, votingTimeInSeconds, candidateNames, userId } = req.body;
+    const { name, description, votingTimeInSeconds, candidateNames } = req.body;
+    const { id: userId } = req.user;
     const { id, createTime, endTime } = await electionFactoryService.createBallot(
       userId,
       name,
