@@ -9,9 +9,9 @@ export const EndedVotings = () => {
 
   useEffect(() => {
     async function fetchInactiveVotings() {
-      const inactiveVotings = await getInactiveElections();
-      if (inactiveVotings) {
-        setVotings(inactiveVotings);
+      const { data } = await getInactiveElections();
+      if (data?.elections) {
+        setVotings(data?.elections);
       }
     }
     fetchInactiveVotings();

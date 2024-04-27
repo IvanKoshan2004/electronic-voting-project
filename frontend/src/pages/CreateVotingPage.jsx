@@ -26,8 +26,8 @@ export function CreateVotingPage() {
     const votingTimeInSeconds = splitTime[0] * 86400 + splitTime[1] * 3600 + splitTime[2] * 60 + splitTime[3];
     const candidateNames = data.candidates.filter(candidate => !!candidate);
     const formatedData = { name: data.name, description: data.description, votingTimeInSeconds, candidateNames };
-    const result = await createElection(formatedData);
-    if (result.success) {
+    const { data: responseData } = await createElection(formatedData);
+    if (responseData.success) {
       navigate("/app/available-votings");
     }
     setIsLoading(false);
