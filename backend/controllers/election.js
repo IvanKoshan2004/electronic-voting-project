@@ -57,6 +57,7 @@ const getActiveElections = async (req, res, next) => {
           endTime: toMilisecondsFromSeconds(election.endTime),
           creatorName: username,
           isVoted,
+          timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
         };
       } catch (error) {
         console.log(error);
@@ -64,18 +65,9 @@ const getActiveElections = async (req, res, next) => {
     }),
   );
 
-  console.log(allDataElections, "getActiveElections");
-
   return res.send(
     createApiResponse({
-      elections: filteredElections.map(election => {
-        return {
-          ...election,
-          createTime: toMilisecondsFromSeconds(election.createTime),
-          endTime: toMilisecondsFromSeconds(election.endTime),
-          timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
-        };
-      }),
+      elections: allDataElections,
     }),
   );
 };
@@ -99,6 +91,10 @@ const getInactiveElections = async (req, res, next) => {
       try {
         const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
         const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+        const { candidateName } = await electionFactoryService.getBallotCandidateById(
+          election.id,
+          election.winnerCandidate,
+        );
 
         return {
           ...election,
@@ -106,6 +102,7 @@ const getInactiveElections = async (req, res, next) => {
           endTime: toMilisecondsFromSeconds(election.endTime),
           creatorName: username,
           isVoted,
+          winnerCandidate: candidateName,
         };
       } catch (error) {
         console.log(error);
@@ -113,17 +110,9 @@ const getInactiveElections = async (req, res, next) => {
     }),
   );
 
-  console.log(allDataElections, "getInactiveElections");
-
   return res.send(
     createApiResponse({
-      elections: filteredElections.map(election => {
-        return {
-          ...election,
-          createTime: toMilisecondsFromSeconds(election.createTime),
-          endTime: toMilisecondsFromSeconds(election.endTime),
-        };
-      }),
+      elections: allDataElections,
     }),
   );
 };

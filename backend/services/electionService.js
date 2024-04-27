@@ -69,6 +69,11 @@ class ElectionFactoryService {
 
   async getAllBallots() {
     try {
+      try {
+        await this.getCurrentBlockchainTimestampSecond();
+      } catch (error) {
+        console.log(error);
+      }
       const results = await ElectionFactoryContract.getAllBallots();
       return results.map(result => {
         const [id, createTime, endTime, creatorId, name, description, ended, winnerCandidate] = result;
@@ -141,8 +146,7 @@ class ElectionFactoryService {
   async getBallotCandidateById(_ballotId, _candidateId) {
     try {
       const result = await ElectionFactoryContract.getBallotCandidateById(_ballotId, _candidateId);
-      const [candidateName] = result;
-      return { candidateName };
+      return { candidateName: result };
     } catch (e) {
       throw Error(e.reason || e.message);
     }
