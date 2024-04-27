@@ -1,6 +1,7 @@
 import css from "./CreateVotingPage.module.css";
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { createElection } from "../api/elections";
 
 export function CreateVotingPage() {
   const [fields, setFields] = useState([
@@ -16,12 +17,13 @@ export function CreateVotingPage() {
     mode: "onBlur",
   });
 
-  const onSubmit = function (data) {
+  const onSubmit = async function (data) {
     const splitTime = data.time.split(":").map(Number);
-    const votingTime = splitTime[0] * 86400 + splitTime[1] * 3600 + splitTime[2] * 60 + splitTime[3];
-    const candidates = data.candidates.filter(candidate => candidate);
-    // TODO: api call
-    console.log(data);
+    const votingTimeInSeconds = splitTime[0] * 86400 + splitTime[1] * 3600 + splitTime[2] * 60 + splitTime[3];
+    const candidateNames = data.candidates.filter(candidate => !!candidate);
+    const formatedData = { name: data.name, description: data.description, votingTimeInSeconds, candidateNames };
+    const result = await createElection(formatedData);
+    console.log(result);
   };
   const handleChange = function (id, value) {
     const newFields = [...fields];
@@ -54,7 +56,13 @@ export function CreateVotingPage() {
       </div>
       <div className={css.inputBlock}>
         <p className={css.inputDescription}>description:</p>
-        <input placeholder="enter description here..." type="text" />
+        <input
+          placeholder="enter description here..."
+          type="text"
+          {...register("description", {
+            required: false,
+          })}
+        />
       </div>
       <div className={css.inputBlock}>
         <p className={css.inputDescription}>voting end time:</p>
