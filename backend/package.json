@@ -8,6 +8,8 @@
     "start": "node app.js",
     "start:dev": "nodemon -e js,json,env app.js ",
     "generate": "prisma generate",
+    "deploy": "node ./scripts/deploy.js --no-deprecation",
+    "deploy:seed": "node ./scripts/deploy.js seed --no-deprecation",
     "blockchain:deploy": "hardhat ignition deploy ignition/modules/Contracts.cjs --network localhost",
     "blockchain:reset": "shx rm -rf ./ignition/deployments ./artifacts ./cache",
     "blockchain:redeploy": "npm run blockchain:reset && npm run blockchain:deploy",
@@ -16,7 +18,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@faker-js/faker": "^7.0.0",
     "@prisma/client": "^5.10.2",
+    "@types/faker": "^6.6.9",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
