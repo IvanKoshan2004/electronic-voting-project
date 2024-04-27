@@ -103,10 +103,10 @@ class ElectionFactoryService {
     }
   }
 
-  async getBallotShortInfoById(_ballotId) {
+  async getBallotInfoById(_ballotId) {
     try {
-      const result = await ElectionFactoryContract.getBallotShortInfoById(_ballotId);
-      const [id, createTime, endTime, creatorId, name, description, ended, winnerCandidate] = result;
+      const result = await ElectionFactoryContract.getBallotInfoById(_ballotId);
+      const [id, createTime, endTime, creatorId, name, description, ended, candidates, winnerCandidate] = result;
       return {
         id: Number(id),
         createTime: Number(createTime),
@@ -115,6 +115,13 @@ class ElectionFactoryService {
         name: name,
         description: description,
         ended: ended,
+        candidates: candidates.map(result => {
+          const [id, name] = result;
+          return {
+            id: Number(id),
+            name: name,
+          };
+        }),
         winnerCandidate: Number(winnerCandidate),
       };
     } catch (e) {
