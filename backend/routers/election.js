@@ -13,4 +13,8 @@ electionRouter.post(
   electionController.createElection,
 );
 
+electionRouter.get("/active-elections", isAuthenticated, electionController.getActiveElections);
+
+electionRouter.get("/inactive-elections", isAuthenticated, electionController.getInactiveElections);
+
 export default electionRouter;

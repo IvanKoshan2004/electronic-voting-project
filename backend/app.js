@@ -7,6 +7,7 @@ import { handleError } from "./middlewares/handleError.js";
 import cors from "cors";
 import { createApiResponse } from "./helpers/createApiResponse.js";
 import electionRouter from "./routers/election.js";
+import { blockchainClock } from "./services/BlockchainClock.js";
 
 const APP_PORT = env.APP_PORT;
 const app = express();
@@ -35,7 +36,13 @@ app.use((req, res) => {
 });
 
 app.use(handleError);
-
-app.listen(APP_PORT, () => {
-  console.log(`Server is listening on port ${APP_PORT}`);
-});
+blockchainClock
+  .syncTime()
+  .then(() => {
+    app.listen(APP_PORT, () => {
+      console.log(`Server is listening on port ${APP_PORT}`);
+    });
+  })
+  .catch(err => {
+    console.log("Can't start server without time sync");
+  });
