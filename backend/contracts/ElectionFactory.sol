@@ -98,6 +98,34 @@ contract ElectionFactory {
         return allCandidateVotes;
     }
 
+    struct BallotInfo {
+        uint256 id;
+        uint256 createTime;
+        uint256 endTime;
+        string creatorId;
+        string name;
+        string description;  
+        bool ended;
+        Candidate[] candidates;
+        uint8 winnerCandidate;
+    }
+
+    function getBallotInfoById(uint256 _ballotId) public view returns (BallotInfo memory) {
+        BallotInfo memory info;
+        info.id = ballots[_ballotId].id;
+        info.createTime = ballots[_ballotId].createTime;
+        info.endTime = ballots[_ballotId].endTime;
+        info.creatorId = ballots[_ballotId].creatorId;
+        info.name = ballots[_ballotId].name;
+        info.description = ballots[_ballotId].description;
+        info.ended = ballots[_ballotId].endTime < block.timestamp;
+        info.candidates = ballots[_ballotId].candidates;
+        if (info.ended) {
+            info.winnerCandidate = getBallotWinner(ballots[_ballotId].id);
+        }
+        return info;
+    }
+
     struct BallotShortInfo {
         uint256 id;
         uint256 createTime;
@@ -109,20 +137,6 @@ contract ElectionFactory {
         uint8 winnerCandidate;
     }
 
-    function getBallotShortInfoById(uint256 _ballotId) public view returns (BallotShortInfo memory) {
-        BallotShortInfo memory info;
-        info.id = ballots[_ballotId].id;
-        info.createTime = ballots[_ballotId].createTime;
-        info.endTime = ballots[_ballotId].endTime;
-        info.creatorId = ballots[_ballotId].creatorId;
-        info.name = ballots[_ballotId].name;
-        info.description = ballots[_ballotId].description;
-        info.ended = ballots[_ballotId].endTime < block.timestamp;
-        if (info.ended) {
-            info.winnerCandidate = getBallotWinner(ballots[_ballotId].id);
-        }
-        return info;
-    }
     function getAllBallots() public view returns (BallotShortInfo[] memory) {
         BallotShortInfo[] memory ballotsInfo = new BallotShortInfo[](nextBallotId);
 
