@@ -1,5 +1,12 @@
 ## How to start Blockchain dev server
 
+## New way
+
+1. install all of the project dependencies with `npm install`.
+2. Start a blockchain network and deploy with command `npm run deploy`. Use `npm run deploy:seed` to deploy and put some data in the blockchain.
+
+## OLD WAY
+
 1. install all of the project dependencies with `npm install`.
 2. Start a blockchain network with command `npx hardhat node`. Upon running this command you see multiple accounts in this network. Use one of the private keys shown here as `PRIVATE_KEY` env variable.
    ![image](./assets/hardhat_node.png)
