@@ -2,6 +2,7 @@ import { createApiResponse } from "../helpers/createApiResponse.js";
 import { blockchainClock } from "../services/BlockchainClock.js";
 import { electionFactoryService } from "../services/electionService.js";
 import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
+import { prisma } from "../lib/db.js";
 
 const createElection = async (req, res, next) => {
   try {
@@ -43,6 +44,28 @@ const getActiveElections = async (req, res, next) => {
 
     return true;
   });
+
+  const allDataElections = await Promise.all(
+    filteredElections.map(async election => {
+      try {
+        const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+        const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+
+        return {
+          ...election,
+          createTime: toMilisecondsFromSeconds(election.createTime),
+          endTime: toMilisecondsFromSeconds(election.endTime),
+          creatorName: username,
+          isVoted,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+  );
+
+  console.log(allDataElections, "getActiveElections");
+
   return res.send(
     createApiResponse({
       elections: filteredElections.map(election => {
@@ -70,6 +93,28 @@ const getInactiveElections = async (req, res, next) => {
 
     return false;
   });
+
+  const allDataElections = await Promise.all(
+    filteredElections.map(async election => {
+      try {
+        const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+        const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+
+        return {
+          ...election,
+          createTime: toMilisecondsFromSeconds(election.createTime),
+          endTime: toMilisecondsFromSeconds(election.endTime),
+          creatorName: username,
+          isVoted,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+  );
+
+  console.log(allDataElections, "getInactiveElections");
+
   return res.send(
     createApiResponse({
       elections: filteredElections.map(election => {
