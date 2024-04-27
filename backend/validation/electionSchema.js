@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const electionSchema = z.object({
-  creatorId: z.string({ required_error: "Creator ID is required" }),
+  userId: z.string({ required_error: "Creator ID is required" }),
   name: z.string({ required_error: "Election name is required" }).min(1),
   description: z.string("Description must be string").optional(),
   votingTimeInSeconds: z

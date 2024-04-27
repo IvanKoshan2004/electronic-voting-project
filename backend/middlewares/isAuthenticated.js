@@ -14,6 +14,7 @@ export const isAuthenticated = async (req, res, next) => {
     if (!id) {
       return next(HttpError(401));
     }
+    req.body.userId = id;
     next();
   } catch (error) {
     next(error);
