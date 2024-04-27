@@ -64,7 +64,7 @@ contract ElectionFactory {
 
     event VoteSuccess();
 
-    function hasVoted(uint256 _ballotId, string memory _voterId) private view returns (bool) {
+    function hasVoted(uint256 _ballotId, string memory _voterId) public view onlyOwner() returns (bool) {
         for (uint256 i = 0; i < ballotsVotes[_ballotId].voters.length; i++) {
             if (keccak256(bytes(ballotsVotes[_ballotId].voters[i])) == keccak256(bytes(_voterId))) {
                 return true;
