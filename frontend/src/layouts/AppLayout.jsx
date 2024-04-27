@@ -2,6 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { MenuItem } from "../components/MenuItem";
 import { logout } from "../api/auth";
 import css from "././AppLayout.module.css";
+import { Toaster } from "react-hot-toast";
 
 export default function AppLayout() {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ export default function AppLayout() {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

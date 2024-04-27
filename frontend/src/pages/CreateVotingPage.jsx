@@ -2,8 +2,11 @@ import css from "./CreateVotingPage.module.css";
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { createElection } from "../api/elections";
+import { useNavigate } from "react-router-dom";
 
 export function CreateVotingPage() {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useState([
     { id: 1, value: "" },
     { id: 2, value: "" },
@@ -18,12 +21,16 @@ export function CreateVotingPage() {
   });
 
   const onSubmit = async function (data) {
+    setIsLoading(true);
     const splitTime = data.time.split(":").map(Number);
     const votingTimeInSeconds = splitTime[0] * 86400 + splitTime[1] * 3600 + splitTime[2] * 60 + splitTime[3];
     const candidateNames = data.candidates.filter(candidate => !!candidate);
     const formatedData = { name: data.name, description: data.description, votingTimeInSeconds, candidateNames };
     const result = await createElection(formatedData);
-    console.log(result);
+    if (result.success) {
+      navigate("/app/available-votings");
+    }
+    setIsLoading(false);
   };
   const handleChange = function (id, value) {
     const newFields = [...fields];
@@ -100,7 +107,7 @@ export function CreateVotingPage() {
           );
         })}
       </div>
-      <button type="submit" className={css.createBtn} disabled={!isValid}>
+      <button type="submit" className={css.createBtn} disabled={!isValid || isLoading}>
         Create
       </button>
     </form>

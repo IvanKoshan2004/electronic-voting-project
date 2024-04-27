@@ -10,8 +10,9 @@ export const EndedVotings = () => {
   useEffect(() => {
     async function fetchInactiveVotings() {
       const inactiveVotings = await getInactiveElections();
-      console.log(inactiveVotings, "activeVotings");
-      setVotings(inactiveVotings);
+      if (inactiveVotings) {
+        setVotings(inactiveVotings);
+      }
     }
     fetchInactiveVotings();
   }, []);

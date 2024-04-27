@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 axios.defaults.baseURL = "http://localhost:8888";
 axios.defaults.withCredentials = true;
@@ -7,6 +8,7 @@ axios.interceptors.response.use(
   response => response,
   error => {
     console.log(error.response.data.message);
+    toast(error.response.data.message);
     return { data: { success: error.response.data.success } };
   },
 );
