@@ -20,6 +20,6 @@ electionRouter.get("/inactive-elections", isAuthenticated, electionController.ge
 
 electionRouter.get("/:electionId", isAuthenticated, electionController.getElectionById);
 
-electionRouter.post("/vote/:electionId", isAuthenticated, validateBody(voteSchema), electionController.voteForElection);
+electionRouter.post("/:electionId/vote", isAuthenticated, validateBody(voteSchema), electionController.voteForElection);
 
 export default electionRouter;
