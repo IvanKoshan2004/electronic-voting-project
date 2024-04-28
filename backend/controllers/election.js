@@ -2,6 +2,7 @@ import { createApiResponse } from "../helpers/createApiResponse.js";
 import { blockchainClock } from "../services/BlockchainClock.js";
 import { electionFactoryService } from "../services/electionService.js";
 import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
+import { prisma } from "../lib/db.js";
 
 const createElection = async (req, res, next) => {
   try {
@@ -43,16 +44,30 @@ const getActiveElections = async (req, res, next) => {
 
     return true;
   });
-  return res.send(
-    createApiResponse({
-      elections: filteredElections.map(election => {
+
+  const allDataElections = await Promise.all(
+    filteredElections.map(async election => {
+      try {
+        const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+        const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+
         return {
           ...election,
           createTime: toMilisecondsFromSeconds(election.createTime),
           endTime: toMilisecondsFromSeconds(election.endTime),
+          creatorName: username,
+          isVoted,
           timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
         };
-      }),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+  );
+
+  return res.send(
+    createApiResponse({
+      elections: allDataElections,
     }),
   );
 };
@@ -70,15 +85,34 @@ const getInactiveElections = async (req, res, next) => {
 
     return false;
   });
-  return res.send(
-    createApiResponse({
-      elections: filteredElections.map(election => {
+
+  const allDataElections = await Promise.all(
+    filteredElections.map(async election => {
+      try {
+        const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+        const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+        const { candidateName } = await electionFactoryService.getBallotCandidateById(
+          election.id,
+          election.winnerCandidate,
+        );
+
         return {
           ...election,
           createTime: toMilisecondsFromSeconds(election.createTime),
           endTime: toMilisecondsFromSeconds(election.endTime),
+          creatorName: username,
+          isVoted,
+          winnerCandidate: candidateName,
         };
-      }),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
+  );
+
+  return res.send(
+    createApiResponse({
+      elections: allDataElections,
     }),
   );
 };
