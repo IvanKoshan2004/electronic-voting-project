@@ -83,4 +83,25 @@ const getInactiveElections = async (req, res, next) => {
   );
 };
 
-export default { createElection, getActiveElections, getInactiveElections };
+const getElectionById = async (req, res, next) => {
+  const { electionId } = req.params;
+  const election = await electionFactoryService.getBallotInfoById(electionId);
+  const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+  const totalVotes = await electionFactoryService.getBallotVotesById(electionId);
+
+  const candidatesWithVotes = election.candidates.map(candidate => {
+    const { votesCount } = totalVotes.find(vote => vote.candidateId === candidate.id);
+    return {
+      ...candidate,
+      votesCount,
+    };
+  });
+
+  return res.send(
+    createApiResponse({
+      election: { ...election, creatorName: username, candidates: candidatesWithVotes },
+    }),
+  );
+};
+
+export default { createElection, getActiveElections, getInactiveElections, getElectionById };

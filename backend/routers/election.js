@@ -17,4 +17,6 @@ electionRouter.get("/active-elections", isAuthenticated, electionController.getA
 
 electionRouter.get("/inactive-elections", isAuthenticated, electionController.getInactiveElections);
 
+electionRouter.get("/:electionId", isAuthenticated, electionController.getElectionById);
+
 export default electionRouter;
