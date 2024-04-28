@@ -3,6 +3,7 @@ import { blockchainClock } from "../services/BlockchainClock.js";
 import { electionFactoryService } from "../services/electionService.js";
 import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
 import { prisma } from "../lib/db.js";
+import { HttpError } from "../helpers/HttpError.js";
 
 const createElection = async (req, res, next) => {
   try {
@@ -147,4 +148,40 @@ const getElectionById = async (req, res, next) => {
   );
 };
 
-export default { createElection, getActiveElections, getInactiveElections, getElectionById };
+const voteForElection = async (req, res, next) => {
+  try {
+    const { electionId } = req.params;
+    const { candidateId } = req.body;
+    const { id: userId } = req.user;
+    const election = await electionFactoryService.getBallotInfoById(electionId);
+    const hasVoted = await electionFactoryService.hasVoted(electionId, userId);
+    const timestamp = blockchainClock.getTimestamp();
+
+    const candidate = election.candidates.find(item => item.id === candidateId);
+
+    if (!candidate) {
+      throw HttpError(400, { message: "There is no candidate with that ID" });
+    }
+    if (election.creatorId === userId) {
+      throw HttpError(400, { message: "You can't vote for your own ballot" });
+    }
+    if (hasVoted) {
+      throw HttpError(400, { message: "You can vote only once" });
+    }
+    if (election.ended || (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000 < 1) {
+      throw HttpError(400, { message: "Election has been ended. You can't vote now" });
+    }
+
+    await electionFactoryService.voteForCandidate(electionId, candidateId, userId);
+
+    return res.send(
+      createApiResponse({
+        message: "Succesfully voted!",
+      }),
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default { createElection, getActiveElections, getInactiveElections, getElectionById, voteForElection };
