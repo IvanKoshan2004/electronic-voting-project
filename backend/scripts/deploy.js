@@ -1,6 +1,8 @@
 import { exec, spawn } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 function deployContract(retryCount) {
   return new Promise((resolve, reject) => {
@@ -38,7 +40,9 @@ function deployContract(retryCount) {
 }
 function modifyEnvFile(key, value) {
   // Get the path to the .env file in the current directory
-  const envFilePath = resolve(import.meta.dirname, "../.env");
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const envFilePath = resolve(__dirname, "../.env");
   console.log("Modifying env file at path: ", envFilePath);
   try {
     let data = readFileSync(envFilePath, "utf8");

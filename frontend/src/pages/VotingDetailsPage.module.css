@@ -1,0 +1,70 @@
+.mainBlock {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+
+.headerBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.headerBlock h1 {
+  font-size: 64px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.headerBlock p {
+  font-size: 24px;
+  font-weight: 200;
+}
+.descriptionBlock {
+  background-color: rgb(142, 142, 142, 0.1);
+  padding: 10px 20px;
+  font-size: 24px;
+  font-weight: 200;
+  text-transform: uppercase;
+  border-radius: 40px;
+}
+.formBlock {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
+.candidatesBlock {
+  width: 67%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.timeBlock {
+  width: 33%;
+  background-color: rgb(221, 46, 46, 0.1);
+  border-radius: 40px;
+  padding: 39px 59px;
+  font-size: 24px;
+  font-weight: 400;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.endDateBlock {
+  text-align: center;
+}
+.submitBtn {
+  width: 30%;
+  padding: 23px 93px;
+  background-color: #000000;
+  color: #d9d9d9;
+  font-size: 24px;
+  border: none;
+  border-radius: 40px;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

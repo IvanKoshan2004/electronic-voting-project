@@ -1,0 +1,31 @@
+.inputBody {
+  width: 100%;
+  background-color: #d9d9d9;
+  display: flex;
+  gap: 20px;
+  border-radius: 40px;
+  padding: 7px 20px;
+}
+.inputBody p {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.radioBtn {
+  width: 2rem;
+  height: 2rem;
+  border: solid black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+.selectedRadioBtn {
+  height: 1.4rem;
+  width: 1.4rem;
+  background-color: black;
+  border-radius: 50%;
+}
