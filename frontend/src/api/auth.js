@@ -7,9 +7,9 @@ axios.defaults.withCredentials = true;
 axios.interceptors.response.use(
   response => response,
   error => {
-    console.log(error.response.data.message);
-    toast(error.response.data.message);
-    return { data: { success: error.response.data.success } };
+    const errorMessage = (error.response?.data && error.response?.data?.message) || "Error happened";
+    toast(errorMessage);
+    return { error };
   },
 );
 

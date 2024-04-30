@@ -8,14 +8,14 @@ import env from "../lib/env.cjs";
 const COOKIE_MAX_AGE_MILISECONDS = 60 * 60 * 1000;
 const oneHourInMs = 60 * 60 * 1000;
 const JWT_SECRET = env.JWT_SECRET;
-const SALT = 10;
+const SALT_ROUNDS = 10;
 const expiresIn = `${COOKIE_MAX_AGE_MILISECONDS / oneHourInMs}h`;
 
 const register = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
-    const hashPassword = await bcrypt.hash(password, SALT);
+    const hashPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     const user = await prisma.user.create({
       data: {

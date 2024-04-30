@@ -30,8 +30,8 @@ export const EndedVotings = () => {
             >
               <div className={css.votingDetails}>
                 <div className={css.headerContainer}>
-                  <h3>{voting.name}</h3>
-                  <p>{voting.creatorName}</p>
+                  <h3 className="elipsisText">{voting.name}</h3>
+                  <p className="elipsisText">{voting.creatorName}</p>
                 </div>
                 <h4>{voting.winnerCandidate}</h4>
               </div>

@@ -4,38 +4,27 @@ import { CandidateInputComponent } from "../components/CandidateInputComponent";
 import { useState } from "react";
 import { useEffect } from "react";
 import dateFormat from "dateformat";
+import { getElectionById } from "../api/elections";
 
 export const VotingDetailsPage = () => {
   const currentTimeMilisec = new Date().getTime();
   const { id } = useParams();
-  const [voteData, setVoteData] = useState();
+  const [votingData, setVotingData] = useState();
   const [selectedId, setSelectedId] = useState("");
   useEffect(() => {
-    try {
-      setVoteData({
-        id: 1,
-        endTime: 123456,
-        creatorId: "john_doe_123",
-        name: "Budget Vote",
-        description:
-          "New budget vote. Please vote because we need money lol. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        candidates: [
-          {
-            id: 1,
-            ballotName: "50 billion",
-          },
-          {
-            id: 2,
-            ballotName: "0 billion",
-          },
-          {
-            id: 3,
-            ballotName: "4+2i billion",
-          },
-        ],
-      });
-    } catch (error) {}
-  }, []);
+    const fetchVoting = async () => {
+      try {
+        const { data, error } = await getElectionById(id + "sd");
+        console.log(data, error);
+        if (data) {
+          setVotingData(data);
+        }
+      } catch (e) {}
+    };
+    fetchVoting();
+  }, [id]);
+
+  console.log(votingData);
 
   const timeConvert = function (totalseconds) {
     const daysout = Math.floor(totalseconds / 86400);
@@ -60,13 +49,13 @@ export const VotingDetailsPage = () => {
   return (
     <div className={css.mainBlock}>
       <div className={css.headerBlock}>
-        <h1>{voteData?.name}</h1>
-        <p>author-{voteData?.creatorId}</p>
+        <h1>{votingData?.name}</h1>
+        <p>author-{votingData?.creatorId}</p>
       </div>
-      <div className={css.descriptionBlock}>{voteData?.description}</div>
+      <div className={css.descriptionBlock}>{votingData?.description}</div>
       <div className={css.formBlock}>
         <form className={css.candidatesBlock}>
-          {voteData?.candidates.map(candidate => {
+          {votingData?.candidates.map(candidate => {
             return (
               <CandidateInputComponent
                 key={candidate.id}
@@ -80,12 +69,12 @@ export const VotingDetailsPage = () => {
           })}
         </form>
         <div className={css.timeBlock}>
-          <span style={{ textDecoration: "underline" }}>{timeConvert(voteData?.endTime).timeleft}</span>
+          <span style={{ textDecoration: "underline" }}>{timeConvert(votingData?.endTime).timeleft}</span>
           <span> left</span>
           <div className={css.endDateBlock}>
             <p>end date:</p>
-            <p>{timeConvert(voteData?.endTime).endDate}</p>
-            <p>{timeConvert(voteData?.endTime).endExactTime}</p>
+            <p>{timeConvert(votingData?.endTime).endDate}</p>
+            <p>{timeConvert(votingData?.endTime).endExactTime}</p>
           </div>
         </div>
       </div>

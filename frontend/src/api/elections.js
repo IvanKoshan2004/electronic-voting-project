@@ -14,3 +14,8 @@ export const getInactiveElections = async () => {
   const result = await axios.get("/election/inactive-elections");
   return result;
 };
+
+export const getElectionById = async id => {
+  const result = await axios.get(`/election/${id}`);
+  return result;
+};

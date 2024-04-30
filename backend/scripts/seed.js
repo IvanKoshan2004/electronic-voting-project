@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { prisma } from "../lib/db.js";
 import { electionFactoryService } from "../services/electionService.js";
+import bcrypt from "bcrypt";
 
 async function createUser(username, password) {
   try {
@@ -11,9 +12,10 @@ async function createUser(username, password) {
     });
   } catch (e) {
   } finally {
+    const hashPassword = await bcrypt.hash(password, 10); //take salt rounds from authentication controller
     return await prisma.user.create({
       data: {
-        password,
+        password: hashPassword,
         username,
       },
     });
