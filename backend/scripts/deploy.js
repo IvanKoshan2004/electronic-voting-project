@@ -88,7 +88,7 @@ async function deploy() {
         setTimeout(async () => {
           console.log("Running seeds");
           const { seed } = await import("./seed.js");
-          await seed(10, 1);
+          await seed(100, 1, 0.1);
           console.log("The blockchain is running in the background, don't stop this command");
         }, 1000);
       }

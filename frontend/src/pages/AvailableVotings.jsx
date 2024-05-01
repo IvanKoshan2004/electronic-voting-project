@@ -2,55 +2,85 @@ import { useEffect, useState } from "react";
 import css from "./AvailableAndEndedVotings.module.css";
 import { useNavigate } from "react-router-dom";
 import { getActiveElections } from "../api/elections";
+import { CustomLoader } from "../components/CustomLoader";
 
 export const AvailableVotings = () => {
   const navigate = useNavigate();
   const [votings, setVotings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
     async function fetchActiveVotings() {
-      const { data } = await getActiveElections();
-      if (data?.elections) {
-        setVotings(data?.elections);
+      try {
+        setIsLoading(true);
+        const { data } = await getActiveElections();
+        if (data?.elections) {
+          setVotings(data?.elections);
+          setElapsedSeconds(0);
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchActiveVotings();
   }, []);
 
-  const timeConvert = function (totalseconds) {
-    const daysout = Math.floor(totalseconds / 86400);
-    const hoursout = Math.floor((totalseconds - daysout * 86400) / 3600);
-    const minutesout = Math.floor((totalseconds - daysout * 86400 - hoursout * 3600) / 60);
-    return `${daysout < 0 ? "" : daysout}d ${hoursout < 0 ? "" : hoursout}h ${minutesout < 0 ? "" : minutesout}m`;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedSeconds(state => state + 1);
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  const timeConvert = function (totalSeconds) {
+    const daysOut = Math.floor(totalSeconds / 86400);
+    const hoursOut = Math.floor((totalSeconds - daysOut * 86400) / 3600);
+    const minutesOut = Math.floor((totalSeconds - daysOut * 86400 - hoursOut * 3600) / 60);
+    const secondsOut = Math.floor(totalSeconds - daysOut * 86400 - hoursOut * 3600 - minutesOut * 60);
+    if (daysOut == 0) {
+      return `${hoursOut < 0 ? "" : hoursOut}h ${minutesOut < 0 ? "" : minutesOut}m ${secondsOut < 0 ? "" : secondsOut}s`;
+    }
+    return `${daysOut < 0 ? "" : daysOut}d ${hoursOut < 0 ? "" : hoursOut}h ${minutesOut < 0 ? "" : minutesOut}m`;
   };
+
+  const notEndedVotings = votings.filter(el => el.timeTillEndInSeconds - elapsedSeconds > 0);
 
   return (
     <div className={css.mainBlock}>
       <h1>available votings</h1>
-      <div className={css.votingsList}>
-        {votings.map((voting, index) => {
-          return (
-            <div
-              className={css.votingBlock}
-              key={index}
-              onClick={() => navigate(`/app/votings/${voting.id.toString()}`)}
-            >
-              <div className={css.votingTime}>
-                <h4>time left:</h4>
-                <p>{timeConvert(voting.timeTillEndInSeconds)}</p>
-              </div>
-              <div className={css.votingDetails}>
-                <div className={css.headerContainer}>
-                  <h3>{voting.name}</h3>
-                  <p>{voting.creatorName}</p>
+      {isLoading ? (
+        <CustomLoader />
+      ) : (
+        <div className={css.votingsList}>
+          {notEndedVotings.map((voting, index) => {
+            return (
+              <div
+                className={css.votingBlock}
+                key={index}
+                onClick={() => navigate(`/app/votings/${voting.id.toString()}`)}
+              >
+                <div className={css.votingTime}>
+                  <h4>time left:</h4>
+                  <p>{timeConvert(voting.timeTillEndInSeconds - elapsedSeconds)}</p>
                 </div>
-                <h4>{voting.description}</h4>
+                <div className={css.votingDetails}>
+                  <div className={css.headerContainer}>
+                    <h3>{voting.name}</h3>
+                    <p>{voting.creatorName}</p>
+                  </div>
+                  <h4>{voting.description}</h4>
+                </div>
+                {voting.isVoted && <div className={css.votedFlag}></div>}
               </div>
-              {voting.isVoted && <div className={css.votedFlag}></div>}
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

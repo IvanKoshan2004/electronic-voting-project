@@ -83,6 +83,7 @@
   text-transform: uppercase;
   display: flex;
   justify-content: center;
+  cursor: pointer;
   align-items: center;
 }
 .createBtn:hover {
@@ -91,6 +92,7 @@
 .createBtn:disabled {
   background-color: rgb(0, 0, 0, 0.5);
   color: rgb(0, 0, 0, 0.5);
+  cursor: not-allowed;
 }
 
 .errorMessage {

@@ -19,3 +19,8 @@ export const getElectionById = async id => {
   const result = await axios.get(`/election/${id}`);
   return result;
 };
+
+export const voteForCandidate = async (ballotId, candidateId) => {
+  const result = await axios.post(`/election/${ballotId}/vote`, { candidateId });
+  return result;
+};

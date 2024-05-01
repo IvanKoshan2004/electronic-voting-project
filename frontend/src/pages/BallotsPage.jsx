@@ -1,3 +1,8 @@
+import { useState } from "react";
+import { CustomLoader } from "../components/CustomLoader";
+
 export const BallotsPage = () => {
-  return <div>BallotsPage</div>;
+  const [isLoading, setIsLoading] = useState(true);
+
+  return isLoading ? <CustomLoader /> : <div>Ballot page</div>;
 };

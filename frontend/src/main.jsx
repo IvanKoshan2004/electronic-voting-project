@@ -37,6 +37,10 @@ const router = createBrowserRouter([
         ),
         children: [
           {
+            index: true,
+            element: <Navigate to="/app/ballots" />,
+          },
+          {
             path: "ballots",
             element: (
               <PrivateRoute redirectTo="/auth/login">

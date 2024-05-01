@@ -16,12 +16,14 @@
   font-size: 64px;
   font-weight: 800;
   text-transform: uppercase;
+  text-align: center;
 }
 .headerBlock p {
   font-size: 24px;
   font-weight: 200;
 }
 .descriptionBlock {
+  width: 100%;
   background-color: rgb(142, 142, 142, 0.1);
   padding: 10px 20px;
   font-size: 24px;
@@ -42,7 +44,7 @@
 }
 
 .timeBlock {
-  width: 33%;
+  width: min(33%, fit-content);
   background-color: rgb(221, 46, 46, 0.1);
   border-radius: 40px;
   padding: 39px 59px;
@@ -51,12 +53,14 @@
   justify-content: center;
   align-items: center;
   text-align: center;
+  height: fit-content;
 }
+
 .endDateBlock {
   text-align: center;
 }
 .submitBtn {
-  width: 30%;
+  width: fit-content;
   padding: 23px 93px;
   background-color: #000000;
   color: #d9d9d9;
@@ -64,7 +68,29 @@
   border: none;
   border-radius: 40px;
   text-transform: uppercase;
+  white-space: nowrap;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.submitBtn:hover {
+  background-color: #333;
+}
+.submitBtn:disabled {
+  background-color: rgb(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0, 0.5);
+}
+.submitBtnForbidden {
+  background-color: #9f0000 !important;
+  color: #d9d9d9 !important;
+  cursor: not-allowed;
+}
+.contextBlock {
+  padding: 21px 102px;
+  display: flex;
+  flex-direction: column;
+  background-color: #d9d9d9;
+  font-size: 1.5rem;
+  border-radius: 20px;
+  gap: 23px;
 }

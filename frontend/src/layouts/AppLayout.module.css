@@ -15,13 +15,26 @@
   width: 100%;
   overflow: hidden;
 }
+@media (max-width: 1600px) {
+  .backdrop {
+    padding: 140px 100px 0 100px;
+  }
+}
+@media (max-width: 1400px) {
+  .container {
+    border-radius: 0;
+  }
+  .backdrop {
+    padding: 0 0 0 0;
+  }
+}
 
 .menu {
   width: 200px;
   display: flex;
   flex-direction: column;
   gap: 5px;
-  height: 100%;
+  height: min(100%, 1000px);
 }
 
 .content {
@@ -33,4 +46,9 @@
   margin-inline: auto;
   padding: 69px 200px 69px 200px;
   max-width: 1600px;
+}
+@media (max-width: 1000px) {
+  .contentContainer {
+    padding: 69px 20px 69px 20px;
+  }
 }

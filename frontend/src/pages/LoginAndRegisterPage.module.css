@@ -44,6 +44,7 @@
   color: #00fff1;
   text-shadow: 0 4px 7px rgba(15, 251, 196, 0.5);
   text-transform: uppercase;
+  text-align: center;
 }
 .formBlock input {
   width: 447px;

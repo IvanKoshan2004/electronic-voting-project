@@ -1,7 +1,7 @@
 import { createApiResponse } from "../helpers/createApiResponse.js";
 import { blockchainClock } from "../services/BlockchainClock.js";
 import { electionFactoryService } from "../services/electionService.js";
-import { toMilisecondsFromSeconds } from "../helpers/timeHelpers.js";
+import { toMilisecondsFromSeconds, toSecondsFromMiliseconds } from "../helpers/timeHelpers.js";
 import { prisma } from "../lib/db.js";
 import { HttpError } from "../helpers/HttpError.js";
 
@@ -68,6 +68,7 @@ const getActiveElections = async (req, res, next) => {
 
   return res.send(
     createApiResponse({
+      currentTime: toSecondsFromMiliseconds(timestamp),
       elections: allDataElections,
     }),
   );
@@ -119,33 +120,40 @@ const getInactiveElections = async (req, res, next) => {
 };
 
 const getElectionById = async (req, res, next) => {
-  const { electionId } = req.params;
-  const { id: userId } = req.user;
-  const election = await electionFactoryService.getBallotInfoById(electionId);
-  const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
-  const totalVotes = await electionFactoryService.getBallotVotesById(electionId);
-  const hasVoted = await electionFactoryService.hasVoted(electionId, userId);
-  const isOwner = userId === election.creatorId;
+  try {
+    const { electionId } = req.params;
+    const { id: userId } = req.user;
+    const election = await electionFactoryService.getBallotInfoById(electionId);
+    const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+    const totalVotes = await electionFactoryService.getBallotVotesById(electionId);
+    const hasVoted = await electionFactoryService.hasVoted(electionId, userId);
+    const timestamp = blockchainClock.getTimestamp();
+    const isOwner = userId === election.creatorId;
+    const ended = election.endTime < toSecondsFromMiliseconds(timestamp);
+    const candidatesWithVotes = election.candidates.map(candidate => {
+      const { votesCount } = totalVotes.find(vote => vote.candidateId === candidate.id);
+      return {
+        ...candidate,
+        votesCount,
+      };
+    });
 
-  const candidatesWithVotes = election.candidates.map(candidate => {
-    const { votesCount } = totalVotes.find(vote => vote.candidateId === candidate.id);
-    return {
-      ...candidate,
-      votesCount,
-    };
-  });
-
-  return res.send(
-    createApiResponse({
-      election: {
-        ...election,
-        creatorName: username,
-        candidates: election.ended || isOwner ? candidatesWithVotes : election.candidates,
-        hasVoted,
-        isOwner,
-      },
-    }),
-  );
+    return res.send(
+      createApiResponse({
+        election: {
+          ...election,
+          currentTime: toSecondsFromMiliseconds(timestamp),
+          creatorName: username,
+          candidates: election.ended || isOwner ? candidatesWithVotes : election.candidates,
+          hasVoted,
+          isOwner,
+          ended,
+        },
+      }),
+    );
+  } catch (error) {
+    next(error);
+  }
 };
 
 const voteForElection = async (req, res, next) => {

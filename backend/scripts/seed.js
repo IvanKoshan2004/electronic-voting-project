@@ -25,7 +25,8 @@ async function createUser(username, password) {
 async function createRandomElection(userId) {
   const name = faker.lorem.words();
   const description = faker.lorem.sentence();
-  const votingTime = faker.datatype.number(Math.random > 0.7 ? { min: 30, max: 200 } : { min: 3600, max: 864000 });
+  const isLong = Math.random() > 0.5;
+  const votingTime = faker.datatype.number({ min: isLong ? 3600 : 10, max: isLong ? 896000 : 180 });
   const candidateCount = faker.datatype.number({ min: 2, max: 10 });
   const candidateNames = Array.from(
     { length: candidateCount },
@@ -42,16 +43,18 @@ async function createRandomElection(userId) {
   }
 }
 
-async function seedElections(userIds, electionCountPerUser) {
+async function seedElections(userIds, electionCountPerUser, chance) {
   const electionIds = [];
 
   for (const userId of userIds) {
     for (let i = 0; i < electionCountPerUser; i++) {
-      const electionId = await createRandomElection(userId);
-      if (electionId !== null) {
-        electionIds.push(electionId);
+      if (Math.random() < chance) {
+        const electionId = await createRandomElection(userId);
+        if (electionId !== null) {
+          electionIds.push(electionId);
+        }
+        await new Promise(resolve => setTimeout(() => resolve(1), 100));
       }
-      await new Promise(resolve => setTimeout(() => resolve(1), 100));
     }
   }
 
@@ -59,12 +62,9 @@ async function seedElections(userIds, electionCountPerUser) {
 }
 
 async function voteInElection(electionId, userId, candidateIds) {
-  // Determine if the user will vote in this election based on a 50% chance
-  if (Math.random() > 0.7) {
-    // Randomly select a candidate to vote for
+  if (Math.random() < 0.75) {
     const candidateId = candidateIds[faker.datatype.number({ min: 0, max: candidateIds.length - 1 })];
     try {
-      // Vote for the selected candidate
       const voted = await electionFactoryService.voteForCandidate(electionId, candidateId, userId);
       console.log(`User ${userId} voted in election ${electionId} for candidate ${candidateId}`);
     } catch (error) {
@@ -73,7 +73,7 @@ async function voteInElection(electionId, userId, candidateIds) {
   }
 }
 
-export async function seed(userCount, electionCount) {
+export async function seed(userCount, electionCount, chance) {
   const userPromises = Array.from({ length: userCount }, async (_, index) => {
     const username = `user${index}`;
     const password = "12345678";
@@ -90,19 +90,20 @@ export async function seed(userCount, electionCount) {
   const userIds = await Promise.all(userPromises);
   const validUserIds = userIds.filter(userId => userId !== null);
 
-  const electionIds = await seedElections(validUserIds, electionCount);
+  const electionIds = await seedElections(validUserIds, electionCount, chance);
   console.log("All elections seeded:", electionIds);
 
   // Vote in each seeded election
   for (const electionId of electionIds) {
     const electionInfo = await electionFactoryService.getBallotInfoById(electionId);
+    console.log("Log here");
     for (const userId of validUserIds) {
       await voteInElection(
         electionId,
         userId,
         electionInfo.candidates.map(el => el.id),
       );
-      await new Promise(resolve => setTimeout(() => resolve(1), 100));
+      // await new Promise(resolve => setTimeout(() => resolve(1), 10));
     }
   }
 }
