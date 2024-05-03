@@ -203,14 +203,13 @@ const getMyElections = async (req, res, next) => {
       filteredElections.map(async election => {
         try {
           const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
-          const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
 
           return {
             ...election,
             createTime: toMilisecondsFromSeconds(election.createTime),
             endTime: toMilisecondsFromSeconds(election.endTime),
             creatorName: username,
-            isVoted,
+            isVoted: false,
             timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
           };
         } catch (error) {
