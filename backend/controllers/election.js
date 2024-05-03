@@ -69,7 +69,7 @@ const getActiveElections = async (req, res, next) => {
   return res.send(
     createApiResponse({
       currentTime: toSecondsFromMiliseconds(timestamp),
-      elections: allDataElections,
+      elections: allDataElections.sort((a, b) => a.endTime - b.endTime),
     }),
   );
 };
@@ -114,7 +114,7 @@ const getInactiveElections = async (req, res, next) => {
 
   return res.send(
     createApiResponse({
-      elections: allDataElections,
+      elections: allDataElections.sort((a, b) => b.endTime - a.endTime),
     }),
   );
 };
@@ -192,4 +192,49 @@ const voteForElection = async (req, res, next) => {
   }
 };
 
-export default { createElection, getActiveElections, getInactiveElections, getElectionById, voteForElection };
+const getMyElections = async (req, res, next) => {
+  try {
+    const { id: userId } = req.user;
+    const elections = await electionFactoryService.getAllBallots();
+    const timestamp = blockchainClock.getTimestamp();
+    const filteredElections = elections.filter(election => election.creatorId === userId);
+
+    const allDataElections = await Promise.all(
+      filteredElections.map(async election => {
+        try {
+          const { username } = await prisma.user.findFirst({ where: { id: election.creatorId } });
+          const isVoted = await electionFactoryService.hasVoted(election.id, req.user.id);
+
+          return {
+            ...election,
+            createTime: toMilisecondsFromSeconds(election.createTime),
+            endTime: toMilisecondsFromSeconds(election.endTime),
+            creatorName: username,
+            isVoted,
+            timeTillEndInSeconds: (toMilisecondsFromSeconds(election.endTime) - timestamp) / 1000,
+          };
+        } catch (error) {
+          console.log(error);
+        }
+      }),
+    );
+
+    return res.send(
+      createApiResponse({
+        currentTime: toSecondsFromMiliseconds(timestamp),
+        elections: allDataElections,
+      }),
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {
+  createElection,
+  getActiveElections,
+  getInactiveElections,
+  getElectionById,
+  voteForElection,
+  getMyElections,
+};
