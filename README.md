@@ -5,13 +5,19 @@ This is an electronic voting application based on blockchain.
 ## MVP Scope
 
 ### General description
-The project includes login and registration pages. Each registered user can view and participate in active votings, as well as see the results of already completed ones.
+The project includes authentication system. Each registered user can create, view and participate in active votings, as well as see the results of already completed ones.
+Ballots are stored in smart contracts and are immutable.
 The project includes pages for viewing lists of active and completed votings, a page with complete information for each ballot, and a page for creating new ballots.
-When creating a ballot, the author specifies its name, description, list of candidates (from 2 to 10) and the time of completion of the ballot.
+The system automatically determines when votings end by time and moves them to the Completed tab.
+
 ### Notes 
+- user information is stored in MongoDB;
+- voting data is stored in a smart contract;
 - every user can be an author;
 - the author cannot participate in his ballots;
-- for everyone except the author, only the final voting results are displayed.
+- when creating a ballot, the author specifies its name, description, list of candidates (from 2 to 10) and the time of completion of the ballot;
+- users can see the winner only after the end of voting;
+- the author sees the voting results dynamically while the ballot is still active.
 
 ### Tech stack
 - Frontend
